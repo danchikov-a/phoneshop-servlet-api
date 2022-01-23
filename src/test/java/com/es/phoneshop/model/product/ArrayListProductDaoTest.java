@@ -47,10 +47,10 @@ public class ArrayListProductDaoTest {
         assertFalse(productDao.findProducts().contains(oldProduct));
     }
 
-    @Test
+    @Test(expected = NoSuchElementException.class)
     public void testDeleteProduct() {
         productDao.delete(2L);
-        throw new NoSuchElementException();
+        productDao.getProduct(2L);
     }
 
 

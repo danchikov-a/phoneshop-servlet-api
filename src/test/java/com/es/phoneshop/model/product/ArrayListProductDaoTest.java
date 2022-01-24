@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 public class ArrayListProductDaoTest {
     private ProductDao productDao;
+    private final long testId = 2L;
 
     @Before
     public void setup() {
@@ -41,16 +42,16 @@ public class ArrayListProductDaoTest {
     @Test
     public void testReplaceProduct() {
         Currency usd = Currency.getInstance("USD");
-        Product oldProduct = productDao.getProduct(2L);
-        Product product = new Product(2L,"test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+        Product oldProduct = productDao.getProduct(testId);
+        Product product = new Product(testId,"test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
         assertFalse(productDao.findProducts().contains(oldProduct));
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testDeleteProduct() {
-        productDao.delete(2L);
-        productDao.getProduct(2L);
+        productDao.delete(testId);
+        productDao.getProduct(testId);
     }
 
 

@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.NoSuchElementException;
 
@@ -19,12 +20,12 @@ public class ArrayListProductDaoTest {
     }
 
     @Test
-    public void testFindProductsNoResults() {
+    public void shouldFindProductsNoResults() {
         assertFalse(productDao.findProducts().isEmpty());
     }
 
     @Test
-    public void testGetSavedProduct() {
+    public void shouldGetSavedProduct() {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
@@ -32,27 +33,26 @@ public class ArrayListProductDaoTest {
     }
 
     @Test
-    public void testFindProductsWithZeroStock() {
+    public void shouldFindProductsWithoutZeroStock() {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
         assertFalse(productDao.findProducts().contains(product));
     }
 
-    @Test
-    public void testReplaceProduct() {
-        Currency usd = Currency.getInstance("USD");
-        Product oldProduct = productDao.getProduct(testId);
-        Product product = new Product(testId,"test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.save(product);
-        assertFalse(productDao.findProducts().contains(oldProduct));
-    }
-
     @Test(expected = NoSuchElementException.class)
-    public void testDeleteProduct() {
+    public void shouldDeleteProduct() {
         productDao.delete(testId);
         productDao.getProduct(testId);
     }
+
+    @Test(expected = NoSuchProductException.class)
+    public void shouldThrowNoSuchProductExceptionWhenNullId() {
+        productDao.delete(null);
+        productDao.getProduct(null);
+    }
+
+
 
 
 }

@@ -13,11 +13,17 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
+    private static Long counter = 1L;
 
     public Product() {
     }
 
+    public static Long getCounter() {
+        return counter;
+    }
+
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
+        this.id = ++counter;
         this.code = code;
         this.description = description;
         this.price = price;

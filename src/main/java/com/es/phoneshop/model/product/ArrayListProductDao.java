@@ -8,7 +8,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
-    private long maxId = 1L;
     private List<Product> products;
     private final Object lock = new Object();
 
@@ -40,12 +39,7 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public void save(Product product) {
         synchronized (lock) {
-            if (product.getId() == null) {
-                product.setId(maxId++);
-                products.add(product);
-            } else {
-                products.set(Math.toIntExact(product.getId()), product);
-            }
+            products.add(product);
         }
     }
 

@@ -23,7 +23,7 @@ public class Product {
     }
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = ++counter;
+        this.id = counter++;
         this.code = code;
         this.description = description;
         this.price = price;

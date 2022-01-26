@@ -45,7 +45,7 @@ public class ArrayListProductDaoTest {
         Product oldProduct = productDao.getProduct(testId);
         Product product = new Product(testId,"test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.save(product);
-        assertTrue(productDao.findProducts().contains(oldProduct));
+        assertFalse(productDao.findProducts().contains(oldProduct));
     }
 
     @Test(expected = NoSuchElementException.class)

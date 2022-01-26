@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Currency;
 import java.util.NoSuchElementException;
 
@@ -15,6 +14,11 @@ import static org.junit.Assert.assertNotNull;
 public class ArrayListProductDaoTest {
     private ProductDao productDao;
     private final long testId = 2L;
+    private final String currencyUSD = "USD";
+    private final String testCode = "test-code";
+    private final String testDescription = "Samsung Galaxy S";
+    private final String testImageURL = "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg";
+
 
     @Before
     public void setup() {
@@ -28,16 +32,16 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void shouldGetSavedProduct() {
-        Currency usd = Currency.getInstance("USD");
-        Product product = new Product("test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 100, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+        Currency usd = Currency.getInstance(currencyUSD);
+        Product product = new Product(testCode, testDescription, new BigDecimal(100), usd, 100, testImageURL);
         productDao.save(product);
         assertNotNull(productDao.getProduct(product.getId()));
     }
 
     @Test
     public void shouldFindProductsWithoutZeroStock() {
-        Currency usd = Currency.getInstance("USD");
-        Product product = new Product("test-code", "Samsung Galaxy S", new BigDecimal(100), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
+        Currency usd = Currency.getInstance(currencyUSD);
+        Product product = new Product(testCode, testDescription, new BigDecimal(100), usd, 0, testImageURL);
         productDao.save(product);
         assertFalse(productDao.findProducts().contains(product));
     }
@@ -53,8 +57,6 @@ public class ArrayListProductDaoTest {
         productDao.delete(null);
         productDao.getProduct(null);
     }
-
-
 
 
 }

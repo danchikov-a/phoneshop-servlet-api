@@ -8,7 +8,9 @@ import java.util.Arrays;
 import java.util.Currency;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 
 public class ArrayListProductDaoTest {
     private ProductDao productDao;

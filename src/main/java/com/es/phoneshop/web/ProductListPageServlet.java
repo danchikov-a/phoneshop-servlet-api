@@ -13,6 +13,8 @@ import java.io.IOException;
 public class ProductListPageServlet extends HttpServlet {
 
     private ProductDao productDao;
+    private final String attributeProducts = "products";
+    private final String productListJsp = "/WEB-INF/pages/productList.jsp";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -22,8 +24,8 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", productDao.findProducts());
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+        request.setAttribute(attributeProducts, productDao.findProducts());
+        request.getRequestDispatcher(productListJsp).forward(request, response);
     }
 
 

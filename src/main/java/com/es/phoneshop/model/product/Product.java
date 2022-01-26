@@ -15,7 +15,14 @@ public class Product {
     private String imageUrl;
     private static Long counter = 1L;
 
-    public Product() {
+    public Product(ProductBuilder productBuilder) {
+        id = counter;
+        code = productBuilder.getCode();
+        description = productBuilder.getDescription();
+        price = productBuilder.getPrice();
+        currency = productBuilder.getCurrency();
+        stock = productBuilder.getStock();
+        imageUrl = productBuilder.getImageUrl();
     }
 
     public static Long getCounter() {

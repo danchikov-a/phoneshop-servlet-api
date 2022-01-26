@@ -18,7 +18,8 @@ public class ArrayListProductDaoTest {
     private final String testCode = "test-code";
     private final String testDescription = "Samsung Galaxy S";
     private final String testImageURL = "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg";
-
+    private final int testStock = 100;
+    private final int zeroStock = 0;
 
     @Before
     public void setup() {
@@ -33,7 +34,14 @@ public class ArrayListProductDaoTest {
     @Test
     public void shouldGetSavedProduct() {
         Currency usd = Currency.getInstance(currencyUSD);
-        Product product = new Product(testCode, testDescription, new BigDecimal(100), usd, 100, testImageURL);
+        Product product = new ProductBuilder()
+                .setCode(testCode)
+                .setDescription(testDescription)
+                .setPrice(new BigDecimal(100))
+                .setCurrency(usd)
+                .setStock(testStock)
+                .setImageUrl(testImageURL)
+                .build();
         productDao.save(product);
         assertNotNull(productDao.getProduct(product.getId()));
     }
@@ -41,7 +49,14 @@ public class ArrayListProductDaoTest {
     @Test
     public void shouldFindProductsWithoutZeroStock() {
         Currency usd = Currency.getInstance(currencyUSD);
-        Product product = new Product(testCode, testDescription, new BigDecimal(100), usd, 0, testImageURL);
+        Product product = new ProductBuilder()
+                .setCode(testCode)
+                .setDescription(testDescription)
+                .setPrice(new BigDecimal(100))
+                .setCurrency(usd)
+                .setStock(zeroStock)
+                .setImageUrl(testImageURL)
+                .build();
         productDao.save(product);
         assertFalse(productDao.findProducts().contains(product));
     }

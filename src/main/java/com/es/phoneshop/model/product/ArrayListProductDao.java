@@ -18,7 +18,7 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public Product getProduct(Long id) throws NoSuchProductException {
         if (id == null) {
-            throw new NoSuchProductException();
+            throw new IllegalArgumentException();
         } else {
             synchronized (lock) {
                 return products.stream()
@@ -49,7 +49,7 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public void delete(Long id) {
         if (id == null) {
-            throw new NoSuchProductException();
+            throw new IllegalArgumentException();
         } else {
             synchronized (lock) {
                 products.removeIf(product -> id.equals(product.getId()));

@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.NoSuchElementException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -61,13 +60,13 @@ public class ArrayListProductDaoTest {
         assertFalse(productDao.findProducts().contains(product));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test(expected = NoSuchProductException.class)
     public void shouldDeleteProduct() {
         productDao.delete(testId);
         productDao.getProduct(testId);
     }
 
-    @Test(expected = NoSuchProductException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldThrowNoSuchProductExceptionWhenNullId() {
         productDao.delete(null);
         productDao.getProduct(null);

@@ -16,7 +16,7 @@ public class Product {
     private static Long counter = 1L;
 
     public Product(ProductBuilder productBuilder) {
-        id = counter;
+        id = counter++;
         code = productBuilder.getCode();
         description = productBuilder.getDescription();
         price = productBuilder.getPrice();
@@ -31,16 +31,6 @@ public class Product {
 
     public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
         this.id = counter++;
-        this.code = code;
-        this.description = description;
-        this.price = price;
-        this.currency = currency;
-        this.stock = stock;
-        this.imageUrl = imageUrl;
-    }
-
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
-        this.id = id;
         this.code = code;
         this.description = description;
         this.price = price;
@@ -107,14 +97,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", currency=" + currency +
-                ", stock=" + stock +
-                ", imageUrl='" + imageUrl + '\'' +
-                '}';
+        return String.format("Product{id=%d, code=%s, description=%s, price=%s, currency=%s, stock=%d, imageUrl=%s",
+                id,code,description,price,currency,stock,imageUrl);
     }
 }

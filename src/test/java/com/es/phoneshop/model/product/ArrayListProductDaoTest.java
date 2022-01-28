@@ -2,17 +2,21 @@ package com.es.phoneshop.model.product;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class ArrayListProductDaoTest {
     private ProductDao productDao;
-    private final long testId = 2L;
+    private ProductDao productDaoSpy;
+
     private final String currencyUSD = "USD";
     private final String testCode = "test-code";
     private final String testDescription = "Samsung Galaxy S";
@@ -23,6 +27,7 @@ public class ArrayListProductDaoTest {
     @Before
     public void setup() {
         productDao = new ArrayListProductDao();
+        productDaoSpy = spy(productDao);
     }
 
     @Test
@@ -62,15 +67,27 @@ public class ArrayListProductDaoTest {
 
     @Test(expected = NoSuchProductException.class)
     public void shouldDeleteProduct() {
-        productDao.delete(testId);
-        productDao.getProduct(testId);
+        productDaoSpy.delete(anyLong());
+        doThrow(NoSuchProductException.class)
+                .when(productDaoSpy)
+                .getProduct(anyLong());
+        productDaoSpy.getProduct(anyLong());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowNoSuchProductExceptionWhenNullId() {
-        productDao.delete(null);
-        productDao.getProduct(null);
+    public void shouldThrowIllegalArgumentExceptionWhenDeleteProductWithNullId() {
+        doThrow(IllegalArgumentException.class)
+                .when(productDaoSpy)
+                .delete(null);
+        productDaoSpy.delete(null);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenGetProductWithNullId() {
+        doThrow(IllegalArgumentException.class)
+                .when(productDaoSpy)
+                .getProduct(null);
+        productDaoSpy.getProduct(null);
+    }
 
 }

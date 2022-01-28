@@ -2,9 +2,12 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ArrayListProductDao implements ProductDao {
     private List<Product> products;
@@ -30,14 +33,40 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts() {
+    public List<Product> findProducts(String query) {
         synchronized (lock) {
-            return products.stream()
+            String space = " ";
+            Stream<Product> streamToHandle = Stream.of();
+
+            if (query == null || query.isEmpty()) {
+                //если запрос пустой, то просто показываем все продукты
+                streamToHandle = products.stream();
+            } else {
+                int querySize = query.split(space).length;
+                //кол-во итераций — кол-во слов в запросе
+                //смысл алгоритма в том, чтобы добавлять в список по кол-ву совпадений
+                for (int i = querySize; i > 0; i--) {
+                    int amountOfCoincidences = i;
+
+                    Predicate<Product> searchPredicate = product -> {
+                        String[] termsOfProductDescription = product.getDescription().split(space);
+                        String[] termsOfQuery = query.split(space);
+                        return Arrays.stream(termsOfQuery)
+                                .filter(Arrays.asList(termsOfProductDescription)::contains)
+                                .count() == amountOfCoincidences;
+                    };
+
+                    streamToHandle = Stream.concat(streamToHandle, products.stream()
+                            .filter(searchPredicate));
+                }
+            }
+            return streamToHandle
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getStock() > 0)
                     .collect(Collectors.toList());
         }
     }
+
 
     @Override
     public void save(Product product) {

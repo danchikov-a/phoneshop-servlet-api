@@ -1,17 +1,25 @@
 package com.es.phoneshop;
 
+import com.es.phoneshop.model.pricehistory.PriceHistoryElement;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
+import com.sun.tools.javac.util.List;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Currency;
+import java.util.stream.IntStream;
 
 public class DemoDataServletContextListener implements ServletContextListener {
     private ProductDao productDao;
     private String contextParam = "insertDemoData";
+    private long firstElement = 1L;
+    private int secondElement = 2;
+    private int lastElement = 14;
+
 
     public DemoDataServletContextListener() {
         this.productDao = ArrayListProductDao.getInstance();
@@ -21,8 +29,8 @@ public class DemoDataServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         boolean isNeedToInsertDemoData = Boolean
                 .parseBoolean(servletContextEvent.getServletContext()
-                .getInitParameter(contextParam));
-        if(isNeedToInsertDemoData){
+                        .getInitParameter(contextParam));
+        if (isNeedToInsertDemoData) {
             saveSampleProducts();
         }
 
@@ -48,6 +56,18 @@ public class DemoDataServletContextListener implements ServletContextListener {
         productDao.save(new Product("simc56", "Siemens C56", new BigDecimal(70), usd, 20, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C56.jpg"));
         productDao.save(new Product("simc61", "Siemens C61", new BigDecimal(80), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C61.jpg"));
         productDao.save(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg"));
+        productDao.getProduct(firstElement).setPriceHistory(
+                new ArrayList<>(List.of(
+                        new PriceHistoryElement("25.3", productDao.getProduct(firstElement).getPrice(), usd),
+                        new PriceHistoryElement("25.4", new BigDecimal(100), usd),
+                        new PriceHistoryElement("25.3", new BigDecimal(4), usd)
+                ))
+        );
+        IntStream.range(secondElement, lastElement).
+                forEach(i -> productDao.getProduct((long) i).setPriceHistory(new ArrayList<>(
+                                List.of(new PriceHistoryElement("25.3", productDao.getProduct((long) i).getPrice(), usd)))
+                        ));
+
 
     }
 }

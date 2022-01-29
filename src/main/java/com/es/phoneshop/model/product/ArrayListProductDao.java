@@ -14,6 +14,9 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products;
     private final Object lock = new Object();
     private static ProductDao instance;
+    private final String fieldDescription = "description";
+    private final String descOrder = "desc";
+    private final String space = " ";
 
     public static synchronized ProductDao getInstance() {
         if(instance == null){
@@ -43,7 +46,6 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     public List<Product> findProducts(String query, String sortField, String order) {
         synchronized (lock) {
-            String space = " ";
             Stream<Product> streamToHandle;
             List<Product> listToShow = new ArrayList<>();
             if (query == null || query.isEmpty()) {
@@ -74,8 +76,6 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     public Stream<Product> sort(Stream<Product> stream, String sortField, String order) {
-        String fieldDescription = "description";
-        String descOrder = "desc";
         if (sortField != null) {
             Comparator<Product> sortFieldComparator = fieldDescription.equals(sortField)
                     ? Comparator.comparing(Product::getDescription)

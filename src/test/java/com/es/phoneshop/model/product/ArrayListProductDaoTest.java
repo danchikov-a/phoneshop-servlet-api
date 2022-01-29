@@ -33,6 +33,14 @@ public class ArrayListProductDaoTest {
     private final String descrToTestRightOrder = "Samsung Galaxy S III";
     private final int firstElem = 0;
     private final long idOfSamsGalaxyIII = 16L;
+    private final String fieldDescription = "description";
+    private final String fieldPrice = "price";
+    private final String orderAsc = "asc";
+    private final String orderDesc = "desc";
+    private final long idOfProd1ToCheckSort = 17L;
+    private final long idOfProd2ToCheckSort = 21L;
+    private final long idOfProd3ToCheckSort = 22L;
+    private final long idOfProd4ToCheckSort = 18L;
 
     @Before
     public void setup() {
@@ -41,7 +49,7 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void shouldFindProductsNoResults() {
-        assertFalse(productDaoSpy.findProducts(anyString()).isEmpty());
+        assertFalse(productDaoSpy.findProducts(anyString(),anyString(),anyString()).isEmpty());
     }
 
     @Test
@@ -71,7 +79,7 @@ public class ArrayListProductDaoTest {
                 .setImageUrl(testImageURL)
                 .build();
         productDaoSpy.save(product);
-        assertFalse(productDaoSpy.findProducts(anyString()).contains(product));
+        assertFalse(productDaoSpy.findProducts(anyString(),anyString(),anyString()).contains(product));
     }
 
     @Test(expected = NoSuchProductException.class)
@@ -101,27 +109,42 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void shouldFindAllProductsWhenQueryIsNull() {
-        productDaoSpy.findProducts(null);
-        verify(productDaoSpy).findProducts(null);
+        productDaoSpy.findProducts(null,null,null);
+        verify(productDaoSpy).findProducts(null,null,null);
     }
 
     @Test
     public void shouldFindAllProductsWhenQueryIsEmpty() {
-        productDaoSpy.findProducts(emptyString);
-        verify(productDaoSpy).findProducts(emptyString);
+        productDaoSpy.findProducts(emptyString,null,null);
+        verify(productDaoSpy).findProducts(emptyString,null,null);
     }
 
     @Test
     public void shouldFindProductsWithMatchingWordsInQuery() {
-        assertEquals(productDaoSpy.findProducts(testDescription).size(),amountOfSamsGalaxys);
+        assertEquals(productDaoSpy.findProducts(testDescription,null,null).size(),amountOfSamsGalaxys);
     }
 
     @Test
     public void shouldFindProductsInOrderOfMatchingWords() {
-        Product firstElement = productDaoSpy.findProducts(descrToTestRightOrder).get(firstElem);
-        System.out.println(productDaoSpy.findProducts(null));
+        Product firstElement = productDaoSpy.findProducts(descrToTestRightOrder,null,null).get(firstElem);
         assertEquals(firstElement, productDaoSpy.getProduct(idOfSamsGalaxyIII));
     }
 
+    @Test
+    public void shouldFindProductsInCorrectSort() {
+        System.out.println(productDaoSpy.findProducts(null,fieldDescription,orderAsc));
+        Product element;
+        element = productDaoSpy.findProducts(null,fieldDescription,orderAsc).get(firstElem);
+        assertEquals(element, productDaoSpy.getProduct(idOfProd1ToCheckSort));
+
+        element = productDaoSpy.findProducts(null,fieldDescription,orderDesc).get(firstElem);
+        assertEquals(element, productDaoSpy.getProduct(idOfProd2ToCheckSort));
+
+        element = productDaoSpy.findProducts(null,fieldPrice,orderAsc).get(firstElem);
+        assertEquals(element, productDaoSpy.getProduct(idOfProd3ToCheckSort));
+
+        element = productDaoSpy.findProducts(null,fieldPrice,orderDesc).get(firstElem);
+        assertEquals(element, productDaoSpy.getProduct(idOfProd4ToCheckSort));
+    }
 
 }

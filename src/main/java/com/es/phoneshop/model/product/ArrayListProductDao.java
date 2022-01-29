@@ -1,10 +1,13 @@
 package com.es.phoneshop.model.product;
 
+
 import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Currency;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Currency;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,7 +36,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts(String query) {
+    public List<Product> findProducts(String query, String sortField, String order) {
         synchronized (lock) {
             String space = " ";
             Stream<Product> streamToHandle = Stream.of();
@@ -60,6 +63,7 @@ public class ArrayListProductDao implements ProductDao {
                             .filter(searchPredicate));
                 }
             }
+            streamToHandle = sort(streamToHandle, sortField, order);
             return streamToHandle
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getStock() > 0)
@@ -67,6 +71,20 @@ public class ArrayListProductDao implements ProductDao {
         }
     }
 
+    public Stream<Product> sort(Stream<Product> stream, String sortField, String order) {
+        String fieldDescription = "description";
+        String descOrder = "desc";
+        if (sortField != null) {
+            Comparator<Product> sortFieldComparator = fieldDescription.equals(sortField) ?
+                    Comparator.comparing(Product::getDescription) : Comparator.comparing(Product::getPrice);
+            if (descOrder.equals(order)) {
+                stream = stream.sorted(sortFieldComparator.reversed());
+            } else {
+                stream = stream.sorted(sortFieldComparator);
+            }
+        }
+        return stream;
+    }
 
     @Override
     public void save(Product product) {

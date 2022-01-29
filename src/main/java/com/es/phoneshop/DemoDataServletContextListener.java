@@ -9,6 +9,7 @@ import com.es.phoneshop.model.product.ProductDao;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -59,14 +60,14 @@ public class DemoDataServletContextListener implements ServletContextListener {
         productDao.save(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg"));
         productDao.getProduct(firstElement).setPriceHistory(
                 new ArrayList<>(Arrays.asList(
-                        new PriceHistoryElement("25.3", productDao.getProduct(firstElement).getPrice(), usd),
-                        new PriceHistoryElement("25.4", new BigDecimal(100), usd),
-                        new PriceHistoryElement("25.3", new BigDecimal(4), usd)
+                        new PriceHistoryElement(LocalDate.of(1,2,3), productDao.getProduct(firstElement).getPrice(), usd),
+                        new PriceHistoryElement(LocalDate.of(3,2,3), new BigDecimal(100), usd),
+                        new PriceHistoryElement(LocalDate.of(4,2,5), new BigDecimal(4), usd)
                 ))
         );
         IntStream.range(secondElement, lastElement).
                 forEach(i -> productDao.getProduct((long) i).setPriceHistory(new ArrayList<>(
-                                Arrays.asList(new PriceHistoryElement("25.3", productDao.getProduct((long) i).getPrice(), usd)))
+                                Arrays.asList(new PriceHistoryElement(LocalDate.of(2,2,3), productDao.getProduct((long) i).getPrice(), usd)))
                         ));
 
     }

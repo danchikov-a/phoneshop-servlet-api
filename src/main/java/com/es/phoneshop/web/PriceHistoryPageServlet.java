@@ -15,7 +15,7 @@ public class PriceHistoryPageServlet extends HttpServlet {
     private final String productJsp = "/WEB-INF/pages/priceHistory.jsp";
     private final String attributeProduct = "priceHistory";
     private final int positionWithoutSlash = 1;
-
+    private final String attributeDescription = "description";
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -26,7 +26,7 @@ public class PriceHistoryPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long productId = Long.parseLong(request.getPathInfo().substring(positionWithoutSlash));
         request.setAttribute(attributeProduct, productDao.getProduct(productId).getPriceHistory());
-        request.setAttribute("description",productDao.getProduct(productId).getDescription());
+        request.setAttribute(attributeDescription, productDao.getProduct(productId).getDescription());
         request.getRequestDispatcher(productJsp).forward(request, response);
     }
 

@@ -1,14 +1,15 @@
 package com.es.phoneshop.model.pricehistory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Currency;
 
 public class PriceHistoryElement {
-    private String startDate;
+    private LocalDate startDate;
     private BigDecimal price;
     private Currency currency;
 
-    public PriceHistoryElement(String startDate, BigDecimal price, Currency currency) {
+    public PriceHistoryElement(LocalDate startDate, BigDecimal price, Currency currency) {
         this.startDate = startDate;
         this.price = price;
         this.currency = currency;
@@ -22,11 +23,11 @@ public class PriceHistoryElement {
         this.currency = currency;
     }
 
-    public String getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 

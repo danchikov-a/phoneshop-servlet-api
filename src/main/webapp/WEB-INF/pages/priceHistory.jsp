@@ -25,9 +25,10 @@
       </thead>
     <c:forEach var="priceHistoryElement" items="${priceHistory}">
       <tr>
-
         <td>
-             ${priceHistoryElement.startDate}
+            <fmt:parseDate value="${priceHistoryElement.startDate}" pattern="yyyy-MM-dd"  var="parsedDate" type="date" />
+            <fmt:formatDate value="${parsedDate}" var="stdDatum" type="date" pattern="dd.MM.yyyy" />
+            ${stdDatum}
         </td>
         <td class="price">
           <fmt:formatNumber value="${priceHistoryElement.price}" type="currency" currencySymbol="${priceHistoryElement.currency.symbol}"/>

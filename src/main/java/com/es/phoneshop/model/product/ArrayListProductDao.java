@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class ArrayListProductDao implements ProductDao {
@@ -43,31 +44,28 @@ public class ArrayListProductDao implements ProductDao {
     public List<Product> findProducts(String query, String sortField, String order) {
         synchronized (lock) {
             String space = " ";
-            Stream<Product> streamToHandle = Stream.of();
-
+            Stream<Product> streamToHandle;
+            List<Product> listToShow = new ArrayList<>();
             if (query == null || query.isEmpty()) {
-                //если запрос пустой, то просто показываем все продукты
-                streamToHandle = products.stream();
+                listToShow.addAll(products);
             } else {
                 int querySize = query.split(space).length;
-                //кол-во итераций — кол-во слов в запросе
-                //смысл алгоритма в том, чтобы добавлять в список по кол-ву совпадений
-                for (int i = querySize; i > 0; i--) {
-                    int amountOfCoincidences = i;
-
-                    Predicate<Product> searchPredicate = product -> {
-                        String[] termsOfProductDescription = product.getDescription().split(space);
-                        String[] termsOfQuery = query.split(space);
-                        return Arrays.stream(termsOfQuery)
-                                .filter(Arrays.asList(termsOfProductDescription)::contains)
-                                .count() == amountOfCoincidences;
-                    };
-
-                    streamToHandle = Stream.concat(streamToHandle, products.stream()
-                            .filter(searchPredicate));
-                }
+                IntStream.iterate(querySize + 1, i -> i - 1)
+                        .limit(querySize + 1)
+                        .forEach(i -> {
+                            Predicate<Product> searchPredicate = product -> {
+                                String[] termsOfProductDescription = product.getDescription().split(space);
+                                String[] termsOfQuery = query.split(space);
+                                return Arrays.stream(termsOfQuery)
+                                        .filter(Arrays.asList(termsOfProductDescription)::contains)
+                                        .count() == i;
+                            };
+                            listToShow.addAll(products.stream()
+                                    .filter(searchPredicate)
+                                    .collect(Collectors.toList()));
+                        });
             }
-            streamToHandle = sort(streamToHandle, sortField, order);
+            streamToHandle = sort(listToShow.stream(), sortField, order);
             return streamToHandle
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getStock() > 0)
@@ -79,13 +77,13 @@ public class ArrayListProductDao implements ProductDao {
         String fieldDescription = "description";
         String descOrder = "desc";
         if (sortField != null) {
-            Comparator<Product> sortFieldComparator = fieldDescription.equals(sortField) ?
-                    Comparator.comparing(Product::getDescription) : Comparator.comparing(Product::getPrice);
-            if (descOrder.equals(order)) {
-                stream = stream.sorted(sortFieldComparator.reversed());
-            } else {
-                stream = stream.sorted(sortFieldComparator);
-            }
+            Comparator<Product> sortFieldComparator = fieldDescription.equals(sortField)
+                    ? Comparator.comparing(Product::getDescription)
+                    : Comparator.comparing(Product::getPrice);
+
+            stream = descOrder.equals(order)
+                    ? stream.sorted(sortFieldComparator.reversed())
+                    : stream.sorted(sortFieldComparator);
         }
         return stream;
     }

@@ -44,7 +44,7 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setup() {
-        productDaoSpy = spy(new ArrayListProductDao());
+        productDaoSpy = spy(ArrayListProductDao.getInstance());
     }
 
     @Test

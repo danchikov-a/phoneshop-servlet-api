@@ -11,7 +11,7 @@
   <table>
       <tr>
         <td>
-          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+          <img class="product-tile" src="${product.imageUrl}">
         </td>
         <td>${product.description}</td>
         <td class="price">

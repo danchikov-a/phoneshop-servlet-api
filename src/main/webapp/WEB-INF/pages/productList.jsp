@@ -31,7 +31,7 @@
     <c:forEach var="product" items="${products}">
       <tr>
         <td>
-          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+          <img class="product-tile" src="${product.imageUrl}">
         </td>
         <td>
             <a href="${pageContext.servletContext.contextPath}/products/${product.id}">

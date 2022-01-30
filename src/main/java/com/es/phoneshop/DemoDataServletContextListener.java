@@ -17,10 +17,10 @@ import java.util.stream.IntStream;
 
 public class DemoDataServletContextListener implements ServletContextListener {
     private ProductDao productDao;
-    private String contextParam = "insertDemoData";
-    private long firstElement = 1L;
-    private int secondElement = 2;
-    private int lastElement = 14;
+    private static final String CONTEXT_PARAM = "insertDemoData";
+    private static final long FIRST_ELEMENT = 1L;
+    private static final int SECOND_ELEMENT = 2;
+    private static final int LAST_ELEMENT = 14;
 
 
     public DemoDataServletContextListener() {
@@ -31,7 +31,7 @@ public class DemoDataServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         boolean isNeedToInsertDemoData = Boolean
                 .parseBoolean(servletContextEvent.getServletContext()
-                        .getInitParameter(contextParam));
+                        .getInitParameter(CONTEXT_PARAM));
         if (isNeedToInsertDemoData) {
             saveSampleProducts();
         }
@@ -58,14 +58,14 @@ public class DemoDataServletContextListener implements ServletContextListener {
         productDao.save(new Product("simc56", "Siemens C56", new BigDecimal(70), usd, 20, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C56.jpg"));
         productDao.save(new Product("simc61", "Siemens C61", new BigDecimal(80), usd, 30, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20C61.jpg"));
         productDao.save(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg"));
-        productDao.getProduct(firstElement).setPriceHistory(
+        productDao.getProduct(FIRST_ELEMENT).setPriceHistory(
                 new ArrayList<>(Arrays.asList(
-                        new PriceHistoryElement(LocalDate.of(1,2,3), productDao.getProduct(firstElement).getPrice(), usd),
+                        new PriceHistoryElement(LocalDate.of(1,2,3), productDao.getProduct(FIRST_ELEMENT).getPrice(), usd),
                         new PriceHistoryElement(LocalDate.of(3,2,3), new BigDecimal(100), usd),
                         new PriceHistoryElement(LocalDate.of(4,2,5), new BigDecimal(4), usd)
                 ))
         );
-        IntStream.range(secondElement, lastElement).
+        IntStream.range(SECOND_ELEMENT, LAST_ELEMENT).
                 forEach(i -> productDao.getProduct((long) i).setPriceHistory(new ArrayList<>(
                                 Arrays.asList(new PriceHistoryElement(LocalDate.of(2,2,3), productDao.getProduct((long) i).getPrice(), usd)))
                         ));

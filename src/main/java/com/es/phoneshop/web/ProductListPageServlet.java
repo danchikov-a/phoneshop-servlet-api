@@ -13,11 +13,11 @@ import java.io.IOException;
 public class ProductListPageServlet extends HttpServlet {
 
     private ProductDao productDao;
-    private final String attributeProducts = "products";
-    private final String productListJsp = "/WEB-INF/pages/productList.jsp";
-    private final String queryParameter = "query";
-    private final String sortFieldParameter = "field";
-    private final String orderParameter = "order";
+    private static final String ATTRIBUTE_PRODUCTS = "products";
+    private static final String PRODUCT_LIST_JSP = "/WEB-INF/pages/productList.jsp";
+    private static final String QUERY_PARAMETER = "query";
+    private static final String SORT_FIELD_PARAMETER = "field";
+    private static final String ORDER_PARAMETER = "order";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -27,12 +27,12 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String query = request.getParameter(queryParameter);
-        String sortField = request.getParameter(sortFieldParameter);
-        String order = request.getParameter(orderParameter);
+        String query = request.getParameter(QUERY_PARAMETER);
+        String sortField = request.getParameter(SORT_FIELD_PARAMETER);
+        String order = request.getParameter(ORDER_PARAMETER);
 
-        request.setAttribute(attributeProducts, productDao.findProducts(query,sortField,order));
-        request.getRequestDispatcher(productListJsp).forward(request, response);
+        request.setAttribute(ATTRIBUTE_PRODUCTS, productDao.findProducts(query,sortField,order));
+        request.getRequestDispatcher(PRODUCT_LIST_JSP).forward(request, response);
     }
 
 

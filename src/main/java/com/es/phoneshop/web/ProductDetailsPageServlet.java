@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
-    private final String productJsp = "/WEB-INF/pages/product.jsp";
-    private final String attributeProduct = "product";
-    private final int positionWithoutSlash = 1;
+    private static final String PRODUCT_JSP = "/WEB-INF/pages/product.jsp";
+    private static final String ATTRIBUTE_PRODUCT = "product";
+    private static final int POSITION_WITHOUT_SLASH = 1;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -24,9 +24,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        long productId = Long.parseLong(request.getPathInfo().substring(positionWithoutSlash));
-        request.setAttribute(attributeProduct, productDao.getProduct(productId));
-        request.getRequestDispatcher(productJsp).forward(request, response);
+        long productId = Long.parseLong(request.getPathInfo().substring(POSITION_WITHOUT_SLASH));
+        request.setAttribute(ATTRIBUTE_PRODUCT, productDao.getProduct(productId));
+        request.getRequestDispatcher(PRODUCT_JSP).forward(request, response);
     }
 
 }

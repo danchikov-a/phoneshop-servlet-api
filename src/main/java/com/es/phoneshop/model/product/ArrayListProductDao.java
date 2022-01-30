@@ -14,9 +14,9 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products;
     private final Object lock = new Object();
     private static ProductDao instance;
-    private final String fieldDescription = "description";
-    private final String descOrder = "desc";
-    private final String space = " ";
+    private static final String FIELD_DESCRIPTION = "description";
+    private static final String DESC_ORDER = "desc";
+    private static final String SPACE = " ";
 
     public static synchronized ProductDao getInstance() {
         if(instance == null){
@@ -51,13 +51,13 @@ public class ArrayListProductDao implements ProductDao {
             if (query == null || query.isEmpty()) {
                 listToShow.addAll(products);
             } else {
-                int querySize = query.split(space).length;
+                int querySize = query.split(SPACE).length;
                 IntStream.iterate(querySize + 1, i -> i - 1)
                         .limit(querySize + 1)
                         .forEach(i -> {
                             Predicate<Product> searchPredicate = product -> {
-                                String[] termsOfProductDescription = product.getDescription().split(space);
-                                String[] termsOfQuery = query.split(space);
+                                String[] termsOfProductDescription = product.getDescription().split(SPACE);
+                                String[] termsOfQuery = query.split(SPACE);
                                 return Arrays.stream(termsOfQuery)
                                         .filter(Arrays.asList(termsOfProductDescription)::contains)
                                         .count() == i;
@@ -77,11 +77,11 @@ public class ArrayListProductDao implements ProductDao {
 
     public Stream<Product> sort(Stream<Product> stream, String sortField, String order) {
         if (sortField != null) {
-            Comparator<Product> sortFieldComparator = fieldDescription.equals(sortField)
+            Comparator<Product> sortFieldComparator = FIELD_DESCRIPTION.equals(sortField)
                     ? Comparator.comparing(Product::getDescription)
                     : Comparator.comparing(Product::getPrice);
 
-            stream = descOrder.equals(order)
+            stream = DESC_ORDER.equals(order)
                     ? stream.sorted(sortFieldComparator.reversed())
                     : stream.sorted(sortFieldComparator);
         }

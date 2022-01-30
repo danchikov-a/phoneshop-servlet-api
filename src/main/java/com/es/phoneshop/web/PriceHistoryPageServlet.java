@@ -12,10 +12,10 @@ import java.io.IOException;
 
 public class PriceHistoryPageServlet extends HttpServlet {
     private ProductDao productDao;
-    private final String productJsp = "/WEB-INF/pages/priceHistory.jsp";
-    private final String attributeProduct = "priceHistory";
-    private final int positionWithoutSlash = 1;
-    private final String attributeDescription = "description";
+    private static final String PRICE_HISTORY_JSP = "/WEB-INF/pages/priceHistory.jsp";
+    private static final String ATTRIBUTE_PRICE_HISTORY = "priceHistory";
+    private static final int POSITION_WITHOUT_SLASH = 1;
+    private static final String ATTRIBUTE_DESCRIPTION = "description";
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -24,10 +24,10 @@ public class PriceHistoryPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        long productId = Long.parseLong(request.getPathInfo().substring(positionWithoutSlash));
-        request.setAttribute(attributeProduct, productDao.getProduct(productId).getPriceHistory());
-        request.setAttribute(attributeDescription, productDao.getProduct(productId).getDescription());
-        request.getRequestDispatcher(productJsp).forward(request, response);
+        long productId = Long.parseLong(request.getPathInfo().substring(POSITION_WITHOUT_SLASH));
+        request.setAttribute(ATTRIBUTE_PRICE_HISTORY, productDao.getProduct(productId).getPriceHistory());
+        request.setAttribute(ATTRIBUTE_DESCRIPTION, productDao.getProduct(productId).getDescription());
+        request.getRequestDispatcher(PRICE_HISTORY_JSP).forward(request, response);
     }
 
 }

@@ -30,6 +30,8 @@ public class ProductListPageServletTest {
     @Mock
     private ServletConfig servletConfig;
 
+    private static final String ATTRIBUTE_PRODUCTS = "products";
+
     private ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Before
@@ -47,6 +49,6 @@ public class ProductListPageServletTest {
     @Test
     public void testProductsLoadedOnThePage() throws ServletException, IOException {
         servlet.doGet(request, response);
-        verify(request).setAttribute(eq("products"), any());
+        verify(request).setAttribute(eq(ATTRIBUTE_PRODUCTS), any());
     }
 }

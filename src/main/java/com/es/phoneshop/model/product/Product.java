@@ -31,6 +31,10 @@ public class Product {
         Product.counter = counter;
     }
 
+    public Product(String description) {
+        this.description = description;
+    }
+
     public Product(ProductBuilder productBuilder) {
         id = counter++;
         code = productBuilder.getCode();

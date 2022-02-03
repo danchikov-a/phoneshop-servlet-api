@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
 
-public class PriceHistoryElement {
+public class PriceHistoryItem {
     private LocalDate startDate;
     private BigDecimal price;
     private Currency currency;
 
-    public PriceHistoryElement(LocalDate startDate, BigDecimal price, Currency currency) {
+    public PriceHistoryItem(LocalDate startDate, BigDecimal price, Currency currency) {
         this.startDate = startDate;
         this.price = price;
         this.currency = currency;

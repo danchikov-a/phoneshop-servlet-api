@@ -116,7 +116,6 @@ public class ArrayListProductDaoTest {
 
     @Test
     public void shouldFindAllProductsWhenQueryIsNull() {
-
         productDao.findProducts(null,null,null);
         verify(productDao).findProducts(null,null,null);
     }

@@ -1,6 +1,6 @@
 package com.es.phoneshop;
 
-import com.es.phoneshop.model.pricehistory.PriceHistoryElement;
+import com.es.phoneshop.model.pricehistory.PriceHistoryItem;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
@@ -22,7 +22,6 @@ public class DemoDataServletContextListener implements ServletContextListener {
     private static final int SECOND_ELEMENT = 2;
     private static final int LAST_ELEMENT = 14;
 
-
     public DemoDataServletContextListener() {
         this.productDao = ArrayListProductDao.getInstance();
     }
@@ -40,7 +39,6 @@ public class DemoDataServletContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
     }
 
     private void saveSampleProducts() {
@@ -60,14 +58,14 @@ public class DemoDataServletContextListener implements ServletContextListener {
         productDao.save(new Product("simsxg75", "Siemens SXG75", new BigDecimal(150), usd, 40, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg"));
         productDao.getProduct(FIRST_ELEMENT).setPriceHistory(
                 new ArrayList<>(Arrays.asList(
-                        new PriceHistoryElement(LocalDate.of(1,2,3), productDao.getProduct(FIRST_ELEMENT).getPrice(), usd),
-                        new PriceHistoryElement(LocalDate.of(3,2,3), new BigDecimal(100), usd),
-                        new PriceHistoryElement(LocalDate.of(4,2,5), new BigDecimal(4), usd)
+                        new PriceHistoryItem(LocalDate.of(1,2,3), productDao.getProduct(FIRST_ELEMENT).getPrice(), usd),
+                        new PriceHistoryItem(LocalDate.of(3,2,3), new BigDecimal(100), usd),
+                        new PriceHistoryItem(LocalDate.of(4,2,5), new BigDecimal(4), usd)
                 ))
         );
         IntStream.range(SECOND_ELEMENT, LAST_ELEMENT).
                 forEach(i -> productDao.getProduct((long) i).setPriceHistory(new ArrayList<>(
-                                Arrays.asList(new PriceHistoryElement(LocalDate.of(2,2,3), productDao.getProduct((long) i).getPrice(), usd)))
+                                Arrays.asList(new PriceHistoryItem(LocalDate.of(2,2,3), productDao.getProduct((long) i).getPrice(), usd)))
                         ));
 
     }

@@ -1,6 +1,8 @@
 package com.es.phoneshop.model.product;
 
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -44,11 +46,11 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts(String query, String sortField, String order) {
+    public List<Product> findProducts(String query, String sortField, String sortOrder) {
         synchronized (lock) {
             Stream<Product> streamToHandle;
             List<Product> listToShow = new ArrayList<>();
-            if (query == null || query.isEmpty()) {
+            if (StringUtils.isEmpty(query)) {
                 listToShow.addAll(products);
             } else {
                 int querySize = query.split(SPACE).length;
@@ -67,7 +69,7 @@ public class ArrayListProductDao implements ProductDao {
                                     .collect(Collectors.toList()));
                         });
             }
-            streamToHandle = sort(listToShow.stream(), sortField, order);
+            streamToHandle = sort(listToShow.stream(), sortField, sortOrder);
             return streamToHandle
                     .filter(product -> product.getPrice() != null)
                     .filter(product -> product.getStock() > 0)
@@ -75,13 +77,13 @@ public class ArrayListProductDao implements ProductDao {
         }
     }
 
-    public Stream<Product> sort(Stream<Product> stream, String sortField, String order) {
+    public Stream<Product> sort(Stream<Product> stream, String sortField, String sortOrder) {
         if (sortField != null) {
             Comparator<Product> sortFieldComparator = FIELD_DESCRIPTION.equals(sortField)
                     ? Comparator.comparing(Product::getDescription)
                     : Comparator.comparing(Product::getPrice);
 
-            stream = DESC_ORDER.equals(order)
+            stream = DESC_ORDER.equals(sortOrder)
                     ? stream.sorted(sortFieldComparator.reversed())
                     : stream.sorted(sortFieldComparator);
         }

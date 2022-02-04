@@ -1,9 +1,9 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.NoSuchProductException;
+import com.es.phoneshop.exception.NoSuchProductException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductBuilder;
-import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.dao.ProductDao;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

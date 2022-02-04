@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,19 +13,26 @@ import java.io.IOException;
 public class ProductListPageServlet extends HttpServlet {
 
     private ProductDao productDao;
-    private final String attributeProducts = "products";
-    private final String productListJsp = "/WEB-INF/pages/productList.jsp";
+    private static final String ATTRIBUTE_PRODUCTS = "products";
+    private static final String PRODUCT_LIST_JSP = "/WEB-INF/pages/productList.jsp";
+    private static final String QUERY_PARAMETER = "query";
+    private static final String SORT_FIELD_PARAMETER = "field";
+    private static final String ORDER_PARAMETER = "order";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        productDao = new ArrayListProductDao();
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute(attributeProducts, productDao.findProducts());
-        request.getRequestDispatcher(productListJsp).forward(request, response);
+        String query = request.getParameter(QUERY_PARAMETER);
+        String sortField = request.getParameter(SORT_FIELD_PARAMETER);
+        String order = request.getParameter(ORDER_PARAMETER);
+
+        request.setAttribute(ATTRIBUTE_PRODUCTS, productDao.findProducts(query,sortField,order));
+        request.getRequestDispatcher(PRODUCT_LIST_JSP).forward(request, response);
     }
 
 

@@ -1,7 +1,10 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.pricehistory.PriceHistoryItem;
+
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 
 public class Product {
     private Long id;
@@ -13,7 +16,24 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
+    private List<PriceHistoryItem> priceHistory;
     private static Long counter = 1L;
+
+    public List<PriceHistoryItem> getPriceHistory() {
+        return priceHistory;
+    }
+
+    public void setPriceHistory(List<PriceHistoryItem> priceHistory) {
+        this.priceHistory = priceHistory;
+    }
+
+    public static void setCounter(Long counter) {
+        Product.counter = counter;
+    }
+
+    public Product(String description) {
+        this.description = description;
+    }
 
     public Product(ProductBuilder productBuilder) {
         id = counter++;

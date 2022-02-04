@@ -17,5 +17,9 @@
   <main>
     <jsp:doBody/>
   </main>
+  <footer>
+      Contacts:
+  </footer>
 </body>
+
 </html>

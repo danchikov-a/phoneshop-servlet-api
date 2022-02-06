@@ -5,6 +5,7 @@ import com.es.phoneshop.model.pricehistory.PriceHistoryItem;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
+import java.util.Objects;
 
 public class Product {
     private Long id;
@@ -119,5 +120,25 @@ public class Product {
     public String toString() {
         return String.format("Product{id=%d, code=%s, description=%s, price=%s, currency=%s, stock=%d, imageUrl=%s",
                 id,code,description,price,currency,stock,imageUrl);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return stock == product.stock &&
+                Objects.equals(id, product.id) &&
+                Objects.equals(code, product.code) &&
+                Objects.equals(description, product.description) &&
+                Objects.equals(price, product.price) &&
+                Objects.equals(currency, product.currency) &&
+                Objects.equals(imageUrl, product.imageUrl) &&
+                Objects.equals(priceHistory, product.priceHistory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, description, price, currency, stock, imageUrl, priceHistory);
     }
 }

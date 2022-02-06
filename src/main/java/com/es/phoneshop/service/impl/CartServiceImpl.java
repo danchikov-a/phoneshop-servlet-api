@@ -1,0 +1,70 @@
+package com.es.phoneshop.service.impl;
+
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.exception.NotEnoughStockException;
+import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartItem;
+import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.service.CartService;
+
+import java.util.Optional;
+
+public class CartServiceImpl implements CartService {
+    private Cart cart;
+
+    private ProductDao productDao;
+    private static CartServiceImpl instance;
+
+    public static CartService getInstance(){
+        synchronized (CartServiceImpl.class) {
+            if (instance == null) {
+                instance = new CartServiceImpl();
+            }
+        }
+        return instance;
+    }
+
+    public CartServiceImpl() {
+        cart = new Cart();
+        productDao = ArrayListProductDao.getInstance();
+    }
+
+    @Override
+    public Cart getCart() {
+        return cart;
+    }
+
+    @Override
+    public void add(Long productId, int quantity) throws NotEnoughStockException {
+        Product product = productDao.getProduct(productId);
+        int remainingQuantity = quantity;
+        CartItem newCartItem = new CartItem(product, quantity);
+
+        Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                .filter(cartItemToCheck -> {
+                    Product productToCheck = cartItemToCheck.getProduct();
+                    Product newProduct = newCartItem.getProduct();
+                    return productToCheck.equals(newProduct);
+                })
+                .findFirst();
+
+        boolean suchCartItemIsPresent = optionalCartItem.isPresent();
+
+        if (suchCartItemIsPresent) {
+            CartItem cartItem = optionalCartItem.get();
+            remainingQuantity += cartItem.getQuantity();
+        }
+
+        if (remainingQuantity > product.getStock()) {
+            throw new NotEnoughStockException();
+        } else {
+            if (suchCartItemIsPresent) {
+                CartItem cartItem = optionalCartItem.get();
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            } else {
+                cart.getCartItems().add(newCartItem);
+            }
+        }
+    }
+}

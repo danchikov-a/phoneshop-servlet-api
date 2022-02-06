@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
     private Cart cart;
-
     private ProductDao productDao;
+
     private static CartServiceImpl instance;
 
     public static CartService getInstance(){

@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.dao.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.exception.NotEnoughStockException;
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.service.CartService;
 import com.es.phoneshop.service.impl.CartServiceImpl;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
+
     private static final String PRODUCT_JSP = "/WEB-INF/pages/product.jsp";
     private static final String ATTRIBUTE_PRODUCT = "product";
     private static final int POSITION_WITHOUT_SLASH = 1;
@@ -35,7 +37,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute(ATTRIBUTE_CART_ITEMS,cartService.getCart().getCartItems());
+        Cart cart = cartService.getCart();
+        request.setAttribute(ATTRIBUTE_CART_ITEMS, cart.getCartItems());
         long productId = parseId(request.getPathInfo());
 
         request.setAttribute(ATTRIBUTE_PRODUCT, productDao.getProduct(productId));

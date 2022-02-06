@@ -41,6 +41,7 @@ public class ArrayListProductDaoTest {
     private static final String ORDER_DESC = "desc";
     private static final String FIELD_INSTANCE = "instance";
     private static final Currency CURRENCY_USD = Currency.getInstance("USD");
+
     @Before
     public void setup() throws NoSuchFieldException, IllegalAccessException {
         Field instance = ArrayListProductDao.class.getDeclaredField(FIELD_INSTANCE);
@@ -177,6 +178,4 @@ public class ArrayListProductDaoTest {
         element = productDao.findProducts(null, FIELD_PRICE, ORDER_DESC).get(FIRST_ELEM);
         assertEquals(element, productDao.getProduct(prod2.getId()));
     }
-
-
 }

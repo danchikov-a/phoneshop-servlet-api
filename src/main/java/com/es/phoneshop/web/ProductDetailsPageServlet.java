@@ -37,7 +37,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cart cart = cartService.getCart();
+        Cart cart = cartService.getCart(request);
         request.setAttribute(ATTRIBUTE_CART_ITEMS, cart.getCartItems());
         long productId = parseId(request.getPathInfo());
 
@@ -60,8 +60,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
             return;
         }
 
+        Cart cart = cartService.getCart(request);
         try {
-            cartService.add(productId, quantity);
+            cartService.add(cart, productId, quantity);
         } catch (NotEnoughStockException e) {
             request.setAttribute(ATTRIBUTE_ERROR, ERROR_STOCK_MESSAGE);
             doGet(request,response);

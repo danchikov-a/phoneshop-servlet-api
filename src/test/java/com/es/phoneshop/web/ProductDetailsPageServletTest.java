@@ -85,7 +85,7 @@ public class ProductDetailsPageServletTest {
 
         when(path).thenReturn(String.format(RETURN_FORMAT,productId));
         when(productDao.getProduct(any())).thenReturn(product);
-        when(cartService.getCart()).thenReturn(new Cart());
+        when(cartService.getCart(request)).thenReturn(new Cart());
 
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
@@ -106,7 +106,7 @@ public class ProductDetailsPageServletTest {
 
         when(path).thenReturn(String.format(RETURN_FORMAT,productId));
         when(productDao.getProduct(any())).thenReturn(product);
-        when(cartService.getCart()).thenReturn(new Cart());
+        when(cartService.getCart(request)).thenReturn(new Cart());
 
         servlet.doGet(request, response);
         verify(request).setAttribute(eq(ATTRIBUTE_PRODUCT), any());
@@ -119,7 +119,7 @@ public class ProductDetailsPageServletTest {
 
         when(path).thenReturn(String.format(RETURN_FORMAT,productId));
         when(productDao.getProduct(productId)).thenThrow(new NoSuchProductException());
-        when(cartService.getCart()).thenReturn(new Cart());
+        when(cartService.getCart(request)).thenReturn(new Cart());
 
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);
@@ -128,7 +128,7 @@ public class ProductDetailsPageServletTest {
     @Test
     public void shouldRedirectWhenDoPostWithoutErrors() throws ServletException, IOException {
         when(request.getPathInfo()).thenReturn(TEST_PATH_INFO);
-        when(cartService.getCart()).thenReturn(new Cart());
+        when(cartService.getCart(request)).thenReturn(new Cart());
 
         servlet.doPost(request, response);
         verify(requestDispatcher).forward(request, response);

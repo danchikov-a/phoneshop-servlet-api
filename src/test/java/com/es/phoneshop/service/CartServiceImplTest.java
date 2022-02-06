@@ -62,11 +62,12 @@ public class CartServiceImplTest {
                 .setImageUrl(TEST_IMAGE_URL)
                 .build();
         long productId = product.getId();
+        Cart cart = new Cart();
 
         when(productDao.getProduct(productId)).thenReturn(product);
 
-        cartService.add(productId,STOCK_LESS_THEN_TEST);
-        Cart cart = cartService.getCart();
+        cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
+
         List<CartItem> cartItems = cart.getCartItems();
         int sizeOfCartItems = cartItems.size();
         assertTrue(sizeOfCartItems > 0);
@@ -86,7 +87,7 @@ public class CartServiceImplTest {
 
         when(productDao.getProduct(productId)).thenReturn(product);
 
-        cartService.add(productId,STOCK_MORE_THEN_TEST);
+        cartService.add(new Cart(),productId,STOCK_MORE_THEN_TEST);
     }
 
     @Test
@@ -100,12 +101,12 @@ public class CartServiceImplTest {
                 .setImageUrl(TEST_IMAGE_URL)
                 .build();
         long productId = product.getId();
+        Cart cart = new Cart();
 
         when(productDao.getProduct(productId)).thenReturn(product);
 
-        cartService.add(productId,STOCK_LESS_THEN_TEST);
-        cartService.add(productId,STOCK_LESS_THEN_TEST);
-        Cart cart = cartService.getCart();
+        cartService.add(cart, productId,STOCK_LESS_THEN_TEST);
+        cartService.add(cart, productId,STOCK_LESS_THEN_TEST);
         List<CartItem> cartItems = cart.getCartItems();
         int sizeOfCartItems = cartItems.size();
         assertTrue(sizeOfCartItems > 0);
@@ -122,10 +123,11 @@ public class CartServiceImplTest {
                 .setImageUrl(TEST_IMAGE_URL)
                 .build();
         long productId = product.getId();
+        Cart cart = new Cart();
 
         when(productDao.getProduct(productId)).thenReturn(product);
 
-        cartService.add(productId,STOCK_LESS_THEN_TEST);
-        cartService.add(productId,REMAINING_STOCK_LESS_THEN_TEST);
+        cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
+        cartService.add(cart,productId,REMAINING_STOCK_LESS_THEN_TEST);
     }
 }

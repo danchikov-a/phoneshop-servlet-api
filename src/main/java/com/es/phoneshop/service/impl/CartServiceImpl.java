@@ -8,9 +8,13 @@ import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.service.CartService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
+    private static final String CART_SESSION_ATTRIBUTE = String.format("%s.cart", CartServiceImpl.class.getName());
+
     private Cart cart;
     private ProductDao productDao;
 
@@ -31,12 +35,20 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart getCart() {
+    public synchronized Cart getCart(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        Cart cart = (Cart) httpSession.getAttribute(CART_SESSION_ATTRIBUTE);
+
+        if(cart == null){
+            cart = new Cart();
+            httpSession.setAttribute(CART_SESSION_ATTRIBUTE, cart);
+        }
+
         return cart;
     }
 
     @Override
-    public void add(Long productId, int quantity) throws NotEnoughStockException {
+    public synchronized void add(Cart cart, Long productId, int quantity) throws NotEnoughStockException {
         Product product = productDao.getProduct(productId);
         int remainingQuantity = quantity;
         CartItem newCartItem = new CartItem(product, quantity);

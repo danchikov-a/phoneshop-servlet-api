@@ -5,7 +5,8 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductBuilder;
 import com.es.phoneshop.dao.ProductDao;
-import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.cart.CartService;
+import com.es.phoneshop.service.product.ProductService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.LinkedList;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +47,8 @@ public class ProductDetailsPageServletTest {
     private ProductDao productDao;
     @Mock
     private CartService cartService;
+    @Mock
+    private ProductService productService;
     @InjectMocks
     private ProductDetailsPageServlet servlet;
 
@@ -86,6 +90,7 @@ public class ProductDetailsPageServletTest {
         when(path).thenReturn(String.format(RETURN_FORMAT,productId));
         when(productDao.getProduct(any())).thenReturn(product);
         when(cartService.getCart(request)).thenReturn(new Cart());
+        when(productService.getProducts(request)).thenReturn(new LinkedList<>());
 
         servlet.doGet(request, response);
         verify(requestDispatcher).forward(request, response);

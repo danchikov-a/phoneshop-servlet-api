@@ -39,3 +39,14 @@ body.product-list {
 .success{
  color:green;
 }
+
+.lastReviewedProduct{
+    border: 1px solid green;
+    margin:5px;
+    width: 5%;
+    display:inline;
+    float:left;
+}
+.labelReviewedProducts{
+    font-weight:bold;
+}

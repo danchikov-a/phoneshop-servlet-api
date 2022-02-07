@@ -5,6 +5,7 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <jsp:useBean id="cartItems" type="java.util.ArrayList" scope="request"/>
+<jsp:useBean id="recentProducts" type="java.util.LinkedList" scope="request"/>
 
 <tags:master pageTitle="Product Details">
 <br>
@@ -69,4 +70,19 @@
       </table>
       <button>Add to cart</button>
   <form>
+  <div class="labelReviewedProducts">
+    Reviewed products
+  </div>
+
+  <div>
+      <c:if test="${not empty recentProducts}">
+        <c:forEach var="recentProduct" items="${recentProducts}">
+            <div class="lastReviewedProduct">
+                <img class="product-tile" src="${recentProduct.imageUrl}">
+                ${recentProduct.description}
+                <fmt:formatNumber value="${recentProduct.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+            </div>
+        </c:forEach>
+      </c:if>
+  </div>
 </tags:master>

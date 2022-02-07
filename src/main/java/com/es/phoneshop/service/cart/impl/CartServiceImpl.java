@@ -1,4 +1,4 @@
-package com.es.phoneshop.service.impl;
+package com.es.phoneshop.service.cart.impl;
 
 import com.es.phoneshop.dao.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
@@ -6,7 +6,7 @@ import com.es.phoneshop.exception.NotEnoughStockException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.CartService;
+import com.es.phoneshop.service.cart.CartService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,7 +29,7 @@ public class CartServiceImpl implements CartService {
         return instance;
     }
 
-    public CartServiceImpl() {
+    private CartServiceImpl() {
         cart = new Cart();
         productDao = ArrayListProductDao.getInstance();
     }

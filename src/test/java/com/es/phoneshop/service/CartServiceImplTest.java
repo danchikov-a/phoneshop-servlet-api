@@ -6,7 +6,8 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductBuilder;
-import com.es.phoneshop.service.impl.CartServiceImpl;
+import com.es.phoneshop.service.cart.CartService;
+import com.es.phoneshop.service.cart.impl.CartServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,7 @@ public class CartServiceImplTest {
     @Mock
     private ProductDao productDao;
     @InjectMocks
-    private CartService cartService = new CartServiceImpl();
+    private CartService cartService = CartServiceImpl.getInstance();
 
     private static final Currency USD = Currency.getInstance("USD");
     private static final String TEST_CODE = "iphone6";
@@ -47,7 +48,7 @@ public class CartServiceImplTest {
         Field instance = CartServiceImpl.class.getDeclaredField(FIELD_INSTANCE);
         instance.setAccessible(true);
         instance.set(null, null);
-        cartService = Mockito.spy(new CartServiceImpl());
+        cartService = Mockito.spy(CartServiceImpl.getInstance());
         MockitoAnnotations.initMocks(this);
     }
 

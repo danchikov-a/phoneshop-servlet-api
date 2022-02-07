@@ -4,8 +4,11 @@ import com.es.phoneshop.dao.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.exception.NotEnoughStockException;
 import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.service.CartService;
-import com.es.phoneshop.service.impl.CartServiceImpl;
+import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.service.cart.CartService;
+import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.service.product.impl.ProductServiceImpl;
+import com.es.phoneshop.service.cart.impl.CartServiceImpl;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,10 +16,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Deque;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
+    private ProductService productService;
 
     private static final String PRODUCT_JSP = "/WEB-INF/pages/product.jsp";
     private static final String ATTRIBUTE_PRODUCT = "product";
@@ -27,12 +32,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private static final String ATTRIBUTE_ERROR = "error";
     private static final String ERROR_MESSAGE = "Product not added to cart";
     private static final String ERROR_STOCK_MESSAGE = "Out of stock";
+    private static final String ATTRIBUTE_RECENT_VIEWED_PRODUCTS = "recentProducts";
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
+        productService = ProductServiceImpl.getInstance();
     }
 
     @Override
@@ -40,7 +47,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Cart cart = cartService.getCart(request);
         request.setAttribute(ATTRIBUTE_CART_ITEMS, cart.getCartItems());
         long productId = parseId(request.getPathInfo());
+        Deque<Product> recentViewedProds = productService.getProducts(request);
 
+        productService.add(recentViewedProds, productId);
+        request.setAttribute(ATTRIBUTE_RECENT_VIEWED_PRODUCTS, productService.getProducts(request));
         request.setAttribute(ATTRIBUTE_PRODUCT, productDao.getProduct(productId));
         request.getRequestDispatcher(PRODUCT_JSP).forward(request, response);
     }

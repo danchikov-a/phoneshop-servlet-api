@@ -79,7 +79,9 @@
         <c:forEach var="recentProduct" items="${recentProducts}">
             <div class="lastReviewedProduct">
                 <img class="product-tile" src="${recentProduct.imageUrl}">
-                ${recentProduct.description}
+                <a href="${pageContext.servletContext.contextPath}/products/${recentProduct.id}">
+                    ${recentProduct.description}
+                </a>
                 <fmt:formatNumber value="${recentProduct.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
             </div>
         </c:forEach>

@@ -43,7 +43,9 @@ body.product-list {
 .lastReviewedProduct{
     border: 1px solid green;
     margin:5px;
-    width: 5%;
+    padding:5px;
+    width: 7%;
+    height: 17%;
     display:inline;
     float:left;
 }

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Deque;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
@@ -30,9 +32,17 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private static final String REDIRECT_URL = "%s/products/%d?message=success";
     private static final String ATTRIBUTE_CART_ITEMS = "cartItems";
     private static final String ATTRIBUTE_ERROR = "error";
-    private static final String ERROR_MESSAGE = "Product not added to cart";
-    private static final String ERROR_STOCK_MESSAGE = "Out of stock";
     private static final String ATTRIBUTE_RECENT_VIEWED_PRODUCTS = "recentProducts";
+    private static final String PROPERTY_BASE_NAME = "messages";
+    private static final String ERROR_MESSAGE_PROPERTY = "errorMessage";
+    private static final String ERROR_STOCK_MESSAGE_PROPERTY = "errorStockMessage";
+    private static final String ERROR_NEGATIVE_NUM_PROPERTY = "errorNegativeNumberMessage";
+
+    private Locale locale;
+    private ResourceBundle resourceBundle;
+    private String errorMessage;
+    private String errorStockMessage;
+    private String errorNegativeNumberMessage;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -40,6 +50,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
         productDao = ArrayListProductDao.getInstance();
         cartService = CartServiceImpl.getInstance();
         productService = ProductServiceImpl.getInstance();
+        locale = Locale.getDefault();
+        resourceBundle = ResourceBundle.getBundle(PROPERTY_BASE_NAME, locale);
+        errorMessage = resourceBundle.getString(ERROR_MESSAGE_PROPERTY);
+        errorStockMessage = resourceBundle.getString(ERROR_STOCK_MESSAGE_PROPERTY);
+        errorNegativeNumberMessage = resourceBundle.getString(ERROR_NEGATIVE_NUM_PROPERTY);
     }
 
     @Override
@@ -65,7 +80,13 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             quantity = Integer.parseInt(quantityString);
         } catch (NumberFormatException numberFormatException) {
-            request.setAttribute(ATTRIBUTE_ERROR, ERROR_MESSAGE);
+            request.setAttribute(ATTRIBUTE_ERROR, errorMessage);
+            doGet(request,response);
+            return;
+        }
+
+        if(quantity <= 0){
+            request.setAttribute(ATTRIBUTE_ERROR, errorNegativeNumberMessage);
             doGet(request,response);
             return;
         }
@@ -74,7 +95,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             cartService.add(cart, productId, quantity);
         } catch (NotEnoughStockException e) {
-            request.setAttribute(ATTRIBUTE_ERROR, ERROR_STOCK_MESSAGE);
+            request.setAttribute(ATTRIBUTE_ERROR, errorStockMessage);
             doGet(request,response);
             return;
         }

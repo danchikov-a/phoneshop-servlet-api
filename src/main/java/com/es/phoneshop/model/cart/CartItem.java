@@ -3,6 +3,8 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.product.Product;
 
 public class CartItem {
+    private static final String CART_ITEM_FORMAT = "[%s,%d]";
+
     private Product product;
     private int quantity;
 
@@ -25,6 +27,6 @@ public class CartItem {
 
     @Override
     public String toString() {
-        return String.format("[%s,%d]",product.getCode(),quantity);
+        return String.format(CART_ITEM_FORMAT, product.getCode(),quantity);
     }
 }

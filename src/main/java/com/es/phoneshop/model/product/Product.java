@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class Product {
+    private static final String PRODUCT_FORMAT =
+            "Product{id=%d, code=%s, description=%s, price=%s, currency=%s, stock=%d, imageUrl=%s";
+
     private Long id;
     private String code;
     private String description;
@@ -118,14 +121,17 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format("Product{id=%d, code=%s, description=%s, price=%s, currency=%s, stock=%d, imageUrl=%s",
-                id,code,description,price,currency,stock,imageUrl);
+        return String.format(PRODUCT_FORMAT, id, code, description, price, currency, stock, imageUrl);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o){
+            return true;
+        }
+        if ((o == null) || (getClass() != o.getClass())){
+            return false;
+        }
         Product product = (Product) o;
         return stock == product.stock &&
                 Objects.equals(id, product.id) &&

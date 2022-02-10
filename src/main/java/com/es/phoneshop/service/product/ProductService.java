@@ -7,5 +7,5 @@ import java.util.Deque;
 
 public interface ProductService {
     Deque<Product> getProducts(HttpServletRequest request);
-    void add(Deque<Product> products, long productId);
+    void add(Deque<Product> products, Long productId);
 }

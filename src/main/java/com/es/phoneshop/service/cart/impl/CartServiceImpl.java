@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
-    private static final String CART_SESSION_ATTRIBUTE = String.format("%s.cart", CartServiceImpl.class.getName());
+    private static final String CART_SESSION = "cartSession";
 
     private Cart cart;
     private ProductDao productDao;
@@ -37,11 +37,11 @@ public class CartServiceImpl implements CartService {
     @Override
     public synchronized Cart getCart(HttpServletRequest request) {
         HttpSession httpSession = request.getSession();
-        Cart cart = (Cart) httpSession.getAttribute(CART_SESSION_ATTRIBUTE);
+        Cart cart = (Cart) httpSession.getAttribute(CART_SESSION);
 
         if(cart == null){
             cart = new Cart();
-            httpSession.setAttribute(CART_SESSION_ATTRIBUTE, cart);
+            httpSession.setAttribute(CART_SESSION, cart);
         }
 
         return cart;
@@ -49,34 +49,38 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public synchronized void add(Cart cart, Long productId, int quantity) throws NotEnoughStockException {
-        Product product = productDao.getProduct(productId);
-        int remainingQuantity = quantity;
-        CartItem newCartItem = new CartItem(product, quantity);
+        if (productId != null) {
+            Product product = productDao.getProduct(productId);
+            int remainingQuantity = quantity;
+            CartItem newCartItem = new CartItem(product, quantity);
 
-        Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
-                .filter(cartItemToCheck -> {
-                    Product productToCheck = cartItemToCheck.getProduct();
-                    Product newProduct = newCartItem.getProduct();
-                    return productToCheck.equals(newProduct);
-                })
-                .findFirst();
+            Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                    .filter(cartItemToCheck -> {
+                        Product productToCheck = cartItemToCheck.getProduct();
+                        Product newProduct = newCartItem.getProduct();
+                        return productToCheck.equals(newProduct);
+                    })
+                    .findFirst();
 
-        boolean suchCartItemIsPresent = optionalCartItem.isPresent();
+            boolean suchCartItemIsPresent = optionalCartItem.isPresent();
 
-        if (suchCartItemIsPresent) {
-            CartItem cartItem = optionalCartItem.get();
-            remainingQuantity += cartItem.getQuantity();
-        }
-
-        if (remainingQuantity > product.getStock()) {
-            throw new NotEnoughStockException();
-        } else {
             if (suchCartItemIsPresent) {
                 CartItem cartItem = optionalCartItem.get();
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            } else {
-                cart.getCartItems().add(newCartItem);
+                remainingQuantity += cartItem.getQuantity();
             }
+
+            if (remainingQuantity > product.getStock()) {
+                throw new NotEnoughStockException();
+            } else {
+                if (suchCartItemIsPresent) {
+                    CartItem cartItem = optionalCartItem.get();
+                    cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                } else {
+                    cart.getCartItems().add(newCartItem);
+                }
+            }
+        } else {
+            throw new IllegalArgumentException();
         }
     }
 }

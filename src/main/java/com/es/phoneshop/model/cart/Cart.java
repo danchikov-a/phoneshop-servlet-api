@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
+    private static final String CART_FORMAT = "Cart{%s}";
+
     private List<CartItem> cartItems;
 
     public Cart() {
@@ -16,6 +18,6 @@ public class Cart {
 
     @Override
     public String toString() {
-        return String.format("Cart{%s}",cartItems);
+        return String.format(CART_FORMAT, cartItems);
     }
 }

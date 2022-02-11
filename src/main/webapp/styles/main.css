@@ -32,3 +32,23 @@ img.product-tile {
 body.product-list {
 
 }
+.error{
+ color:red;
+}
+
+.success{
+ color:green;
+}
+
+.lastReviewedProduct{
+    border: 1px solid green;
+    margin:5px;
+    padding:5px;
+    width: 7%;
+    height: 17%;
+    display:inline;
+    float:left;
+}
+.labelReviewedProducts{
+    font-weight:bold;
+}

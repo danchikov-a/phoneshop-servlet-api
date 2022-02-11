@@ -2,6 +2,8 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.dao.ArrayListProductDao;
 import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.service.product.ProductService;
+import com.es.phoneshop.service.product.impl.ProductServiceImpl;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ProductListPageServlet extends HttpServlet {
+    private ProductService productService;
 
+    private static final String ATTRIBUTE_RECENT_VIEWED_PRODUCTS = "recentProducts";
     private ProductDao productDao;
     private static final String ATTRIBUTE_PRODUCTS = "products";
     private static final String PRODUCT_LIST_JSP = "/WEB-INF/pages/productList.jsp";
@@ -23,6 +27,7 @@ public class ProductListPageServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         productDao = ArrayListProductDao.getInstance();
+        productService = ProductServiceImpl.getInstance();
     }
 
     @Override
@@ -31,6 +36,7 @@ public class ProductListPageServlet extends HttpServlet {
         String sortField = request.getParameter(SORT_FIELD_PARAMETER);
         String order = request.getParameter(ORDER_PARAMETER);
 
+        request.setAttribute(ATTRIBUTE_RECENT_VIEWED_PRODUCTS, productService.getProducts(request));
         request.setAttribute(ATTRIBUTE_PRODUCTS, productDao.findProducts(query,sortField,order));
         request.getRequestDispatcher(PRODUCT_LIST_JSP).forward(request, response);
     }

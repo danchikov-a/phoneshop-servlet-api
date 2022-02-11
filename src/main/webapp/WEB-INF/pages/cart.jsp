@@ -12,34 +12,50 @@
   </div>
   <div class="success">
     <c:if test="${empty error and not empty param.message}">
-        Product added to cart
+        Cart updated
     </c:if>
    </div>
-  <table>
-      <thead>
-        <tr>
-          <td>Image</td>
-          <td>
-              Description
-          </td>
-          <td class="price">
-              Price
-          </td>
-        </tr>
-      </thead>
-      <c:forEach var="cartItem" items="${cart.cartItems}">
-        <tr>
-          <td>
-            <img class="product-tile" src="${cartItem.product.imageUrl}">
-          </td>
-          <td>
-              ${cartItem.product.description}
-          </td>
-          <td class="price">
-             <fmt:formatNumber value="${cartItem.product.price}" type="currency" currencySymbol="${cartItem.product.currency.symbol}"/>
-          </td>
-        </tr>
-      </c:forEach>
-    </table>
-
+  <form method="post" action="cart">
+      <table>
+          <thead>
+            <tr>
+              <td>Image</td>
+              <td>
+                  Description
+              </td>
+              <td class="price">
+                Quantity
+              </td>
+              <td class="price">
+                  Price
+              </td>
+            </tr>
+          </thead>
+          <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
+            <tr>
+              <td>
+                <img class="product-tile" src="${cartItem.product.imageUrl}">
+              </td>
+              <td>
+                  ${cartItem.product.description}
+              </td>
+              <td>
+                <c:set var="error" value="${errors[cartItem.product.id]}"/>
+                <input name="quantity" class="price" value=
+                    "${not empty error ? paramValues['quantity'][status.index]: cartItem.quantity}">
+                <input name="productId" type="hidden" value="${cartItem.product.id}">
+                <c:if test="${not empty error}">
+                    <div class="error">
+                        ${errors[cartItem.product.id]}
+                    </div>
+                </c:if>
+              </td>
+              <td class="price">
+                 <fmt:formatNumber value="${cartItem.product.price}" type="currency" currencySymbol="${cartItem.product.currency.symbol}"/>
+              </td>
+            </tr>
+          </c:forEach>
+        </table>
+        <button>Update</button>
+    </form>
 </tags:master>

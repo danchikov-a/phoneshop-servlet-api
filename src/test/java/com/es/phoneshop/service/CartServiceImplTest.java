@@ -131,4 +131,42 @@ public class CartServiceImplTest {
         cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
         cartService.add(cart,productId,REMAINING_STOCK_LESS_THEN_TEST);
     }
+
+    @Test
+    public void shouldUpdateCartWhenStockLess() throws NotEnoughStockException {
+        Product product = new ProductBuilder()
+                .setCode(TEST_CODE)
+                .setDescription(TEST_DESCRIPTION)
+                .setPrice(TEST_PRICE)
+                .setCurrency(USD)
+                .setStock(TEST_STOCK)
+                .setImageUrl(TEST_IMAGE_URL)
+                .build();
+        long productId = product.getId();
+        Cart cart = new Cart();
+
+        when(productDao.getProduct(productId)).thenReturn(product);
+
+        cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
+        cartService.update(cart,productId,REMAINING_STOCK_LESS_THEN_TEST);
+    }
+
+    @Test(expected = NotEnoughStockException.class)
+    public void shouldNotUpdateCartWithQuantityMoreThenStock() throws NotEnoughStockException {
+        Product product = new ProductBuilder()
+                .setCode(TEST_CODE)
+                .setDescription(TEST_DESCRIPTION)
+                .setPrice(TEST_PRICE)
+                .setCurrency(USD)
+                .setStock(TEST_STOCK)
+                .setImageUrl(TEST_IMAGE_URL)
+                .build();
+        long productId = product.getId();
+        Cart cart = new Cart();
+        when(productDao.getProduct(productId)).thenReturn(product);
+
+        cartService.add(cart, productId,STOCK_LESS_THEN_TEST);
+        cartService.update(cart, productId,STOCK_MORE_THEN_TEST);
+    }
+
 }

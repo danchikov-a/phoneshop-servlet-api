@@ -83,4 +83,33 @@ public class CartServiceImpl implements CartService {
             throw new IllegalArgumentException();
         }
     }
+
+    @Override
+    public synchronized void update(Cart cart, Long productId, int quantity) throws NotEnoughStockException {
+        if (productId != null) {
+            Product product = productDao.getProduct(productId);
+
+            if (quantity > product.getStock()) {
+                throw new NotEnoughStockException();
+            }else{
+                CartItem newCartItem = new CartItem(product, quantity);
+
+                Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                        .filter(cartItemToCheck -> {
+                            Product productToCheck = cartItemToCheck.getProduct();
+                            Product newProduct = newCartItem.getProduct();
+                            return productToCheck.equals(newProduct);
+                        })
+                        .findFirst();
+
+                if(optionalCartItem.isPresent()) {
+                    CartItem cartItem = optionalCartItem.get();
+                    cartItem.setQuantity(quantity);
+                }
+            }
+
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 }

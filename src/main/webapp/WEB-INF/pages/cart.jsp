@@ -31,6 +31,8 @@
               </td>
             </tr>
           </thead>
+          Total cost: <fmt:formatNumber value="${cart.totalCost}" type="currency" currencySymbol="${cartItem.product.currency.symbol}"/>
+          Total quantity: ${cart.totalQuantity}
           <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
             <tr>
               <td>

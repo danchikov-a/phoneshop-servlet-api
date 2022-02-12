@@ -52,3 +52,8 @@ body.product-list {
 .labelReviewedProducts{
     font-weight:bold;
 }
+.cart{
+    display:inline;
+    float:right;
+    font: 400 25px/1.3 'Lobster Two', Helvetica, sans-serif;
+}

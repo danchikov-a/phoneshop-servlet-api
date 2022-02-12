@@ -10,6 +10,7 @@ import com.es.phoneshop.service.cart.CartService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
@@ -109,6 +110,20 @@ public class CartServiceImpl implements CartService {
             }
 
         } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public synchronized void delete(Cart cart, Long productId) {
+        if(productId != null){
+            List<CartItem> cartItems = cart.getCartItems();
+            cartItems.removeIf(cartItem -> {
+                        Product product = cartItem.getProduct();
+                        return productId.equals(product.getId());
+                    }
+            );
+        }else{
             throw new IllegalArgumentException();
         }
     }

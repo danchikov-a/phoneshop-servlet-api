@@ -14,7 +14,7 @@
     <c:if test="${empty error and not empty param.message}">
         Cart updated
     </c:if>
-   </div>
+  </div>
   <form method="post" action="cart">
       <table>
           <thead>
@@ -39,7 +39,9 @@
                 <img class="product-tile" src="${cartItem.product.imageUrl}">
               </td>
               <td>
-                  ${cartItem.product.description}
+                  <a href="${pageContext.servletContext.contextPath}/products/${cartItem.product.id}">
+                      ${cartItem.product.description}
+                  </a>
               </td>
               <td>
                 <c:set var="error" value="${errors[cartItem.product.id]}"/>

@@ -66,28 +66,30 @@ public class CartPageServlet extends HttpServlet {
         }
     }
 
-    private Map<Long, String> parseError(Cart cart, HttpServletRequest request){
+    private Map<Long, String> parseError(Cart cart, HttpServletRequest request) {
         String[] quantities = request.getParameterValues(QUANTITY_PARAMETER);
         String[] productIds = request.getParameterValues(PRODUCT_ID_PARAMETER);
         Map<Long, String> errors = new HashMap<>();
 
-        for (int i = 0; i < quantities.length; i++) {
-            int quantityValue;
-            Long productId = Long.valueOf(productIds[i]);
-            try {
-                quantityValue =  Integer.parseInt(quantities[i]);
-                if(quantityValue < 0){
-                    errors.put(productId, errorNegativeNumberMessage);
-                }else {
-                    cartService.update(cart, Long.valueOf(productIds[i]), quantityValue);
-                }
-            } catch (NumberFormatException | NotEnoughStockException exception) {
-                if(exception.getClass().equals(NumberFormatException.class)){
-                    errors.put(productId, errorMessage);
-                }else if(exception.getClass().equals(NotEnoughStockException.class)){
-                    errors.put(productId, errorStockMessage);
-                }
+        if (productIds != null) {
+            for (int i = 0; i < quantities.length; i++) {
+                int quantityValue;
+                Long productId = Long.valueOf(productIds[i]);
+                try {
+                    quantityValue = Integer.parseInt(quantities[i]);
+                    if (quantityValue < 0) {
+                        errors.put(productId, errorNegativeNumberMessage);
+                    } else {
+                        cartService.update(cart, Long.valueOf(productIds[i]), quantityValue);
+                    }
+                } catch (NumberFormatException | NotEnoughStockException exception) {
+                    if (exception.getClass().equals(NumberFormatException.class)) {
+                        errors.put(productId, errorMessage);
+                    } else if (exception.getClass().equals(NotEnoughStockException.class)) {
+                        errors.put(productId, errorStockMessage);
+                    }
 
+                }
             }
         }
         return errors;

@@ -3,7 +3,7 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.exception.NoSuchProductException;
 import com.es.phoneshop.model.product.Product;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

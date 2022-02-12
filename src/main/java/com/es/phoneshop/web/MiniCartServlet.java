@@ -10,12 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Currency;
 
 public class MiniCartServlet extends HttpServlet {
     private CartService cartService;
 
     private static final String MINI_CART_JSP = "/WEB-INF/pages/miniCart.jsp";
     private static final String CART_ATTRIBUTE = "cart";
+    private static final String CURRENCY_ATTRIBUTE = "curr";
+    private static final Currency currency = Currency.getInstance("USD");
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -28,6 +31,7 @@ public class MiniCartServlet extends HttpServlet {
         Cart cart = cartService.getCart(request);
 
         request.setAttribute(CART_ATTRIBUTE, cart);
+        request.setAttribute(CURRENCY_ATTRIBUTE, currency);
         request.getRequestDispatcher(MINI_CART_JSP).include(request, response);
     }
 

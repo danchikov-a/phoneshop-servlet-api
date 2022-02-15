@@ -143,6 +143,7 @@ public class ProductDetailsPageServletTest {
     public void shouldShowErrorMessageWhenDoPostNumberFormatException() throws ServletException, IOException {
         when(request.getPathInfo()).thenReturn(TEST_PATH_INFO_STRING);
         servlet.doPost(request, response);
+
         verify(request).setAttribute(ATTRIBUTE_ERROR,ERROR_MESSAGE);
     }
 

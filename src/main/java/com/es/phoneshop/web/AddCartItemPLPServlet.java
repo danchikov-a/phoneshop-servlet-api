@@ -62,17 +62,13 @@ public class AddCartItemPLPServlet extends HttpServlet {
                 cartService.add(cart, productIdValue, quantityValue);
                 redirectURL = request.getContextPath() + SUCCESS_REDIRECT;
             }
-        } catch (NumberFormatException | NotEnoughStockException exception) {
-            if(exception.getClass().equals(NumberFormatException.class)){
-                request.setAttribute(ERROR_ATTRIBUTE, errorMessage);
-            }else if(exception.getClass().equals(NotEnoughStockException.class)){
-                request.setAttribute(ERROR_ATTRIBUTE, errorStockMessage);
-            }
+        } catch (NumberFormatException exception) {
+            request.setAttribute(ERROR_ATTRIBUTE, errorMessage);
+        } catch (NotEnoughStockException exception) {
+            request.setAttribute(ERROR_ATTRIBUTE, errorStockMessage);
         }
+
         request.setAttribute(CART_ATTRIBUTE, cart);
         response.sendRedirect(redirectURL);
     }
-
-
-
 }

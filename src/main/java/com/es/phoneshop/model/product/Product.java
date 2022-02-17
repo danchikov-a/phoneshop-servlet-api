@@ -8,7 +8,7 @@ import java.util.Currency;
 import java.util.List;
 import java.util.Objects;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
     private static final String PRODUCT_FORMAT =
             "Product{id=%d, code=%s, description=%s, price=%s, currency=%s, stock=%d, imageUrl=%s";
 

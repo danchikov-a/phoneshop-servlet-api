@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 
 public class CartPageServlet extends HttpServlet {
     private CartService cartService;
@@ -56,7 +57,29 @@ public class CartPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
-        Map<Long, String> errors = parseError(cart, request);
+        Map<String, String> parametersFromUpdate = makeMapFromUpdateParams(request);
+        Map<Long, String> errors = new HashMap<>();
+
+        parametersFromUpdate.forEach((quantityStr, productIdStr) -> {
+            int quantityValue;
+            Long productId = Long.valueOf(productIdStr);
+            try {
+                quantityValue = Integer.parseInt(quantityStr);
+                if (quantityValue < 0) {
+                    errors.put(productId, errorNegativeNumberMessage);
+                    return;
+                }
+            } catch (NumberFormatException exception) {
+                errors.put(productId, errorMessage);
+                return;
+            }
+
+            try{
+                cartService.update(cart, productId, quantityValue);
+            } catch (NotEnoughStockException e) {
+                errors.put(productId, errorStockMessage);
+            }
+        });
 
         if(!errors.isEmpty()) {
             request.setAttribute(INPUT_ERRORS, errors);
@@ -66,33 +89,17 @@ public class CartPageServlet extends HttpServlet {
         }
     }
 
-    private Map<Long, String> parseError(Cart cart, HttpServletRequest request) {
+    private Map<String, String> makeMapFromUpdateParams(HttpServletRequest request){
+        Map<String, String> mapOfUpdateParameters = new HashMap<>();
         String[] quantities = request.getParameterValues(QUANTITY_PARAMETER);
         String[] productIds = request.getParameterValues(PRODUCT_ID_PARAMETER);
-        Map<Long, String> errors = new HashMap<>();
 
-        if (productIds != null) {
-            for (int i = 0; i < quantities.length; i++) {
-                int quantityValue;
-                Long productId = Long.valueOf(productIds[i]);
-                try {
-                    quantityValue = Integer.parseInt(quantities[i]);
-                    if (quantityValue < 0) {
-                        errors.put(productId, errorNegativeNumberMessage);
-                    } else {
-                        cartService.update(cart, Long.valueOf(productIds[i]), quantityValue);
-                    }
-                } catch (NumberFormatException | NotEnoughStockException exception) {
-                    if (exception.getClass().equals(NumberFormatException.class)) {
-                        errors.put(productId, errorMessage);
-                    } else if (exception.getClass().equals(NotEnoughStockException.class)) {
-                        errors.put(productId, errorStockMessage);
-                    }
-
-                }
-            }
+        if(productIds != null) {
+            IntStream.range(0, quantities.length)
+                    .forEach(i -> mapOfUpdateParameters.put(quantities[i], productIds[i]));
         }
-        return errors;
+
+        return mapOfUpdateParameters;
     }
 
 }

@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DeleteCartItemServletTest {
@@ -49,5 +50,16 @@ public class DeleteCartItemServletTest {
         servlet.doPost(request, response);
 
         verify(cartService).delete(cartService.getCart(request), TEST_PRODUCT_ID);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWhenProductIdNull() throws ServletException, IOException {
+        when(request.getPathInfo()).thenReturn(TEST_PATH_INFO);
+        doThrow(IllegalArgumentException.class).when(cartService)
+                .delete(cartService.getCart(request), null);
+
+        servlet.doPost(request, response);
+
+        verify(cartService).delete(cartService.getCart(request), null);
     }
 }

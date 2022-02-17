@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Cart implements Serializable{
+public class Cart implements Serializable {
     private static final String CART_FORMAT = "Cart{%s}";
 
     private List<CartItem> cartItems;

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
 
-public class PriceHistoryItem implements Serializable{
+public class PriceHistoryItem implements Serializable {
     private LocalDate startDate;
     private BigDecimal price;
     private Currency currency;

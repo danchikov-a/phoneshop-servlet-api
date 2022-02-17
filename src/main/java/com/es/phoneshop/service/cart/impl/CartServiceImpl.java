@@ -99,9 +99,9 @@ public class CartServiceImpl implements CartService {
 
                 Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
                         .filter(cartItemToCheck -> {
-                            Product productToCheck = cartItemToCheck.getProduct();
-                            Product newProduct = newCartItem.getProduct();
-                            return productToCheck.equals(newProduct);
+                            Long productToCheckId = cartItemToCheck.getProduct().getId();
+                            Long newProductId = newCartItem.getProduct().getId();
+                            return productToCheckId.equals(newProductId);
                         })
                         .findFirst();
 
@@ -131,7 +131,7 @@ public class CartServiceImpl implements CartService {
         }
     }
 
-    private void recalculateCart(Cart cart){
+    private void recalculateCart(Cart cart) {
         List<CartItem> cartItems = cart.getCartItems();
         int totalQuantity = cartItems.stream()
                 .map(CartItem::getQuantity)

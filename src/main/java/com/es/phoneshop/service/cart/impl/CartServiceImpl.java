@@ -10,6 +10,8 @@ import com.es.phoneshop.service.cart.CartService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 public class CartServiceImpl implements CartService {
@@ -79,8 +81,74 @@ public class CartServiceImpl implements CartService {
                     cart.getCartItems().add(newCartItem);
                 }
             }
+            recalculateCart(cart);
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public synchronized void update(Cart cart, Long productId, int quantity) throws NotEnoughStockException {
+        if (productId != null) {
+            Product product = productDao.getProduct(productId);
+
+            if (quantity > product.getStock()) {
+                throw new NotEnoughStockException();
+            }else{
+                CartItem newCartItem = new CartItem(product, quantity);
+
+                Optional<CartItem> optionalCartItem = cart.getCartItems().stream()
+                        .filter(cartItemToCheck -> {
+                            Long productToCheckId = cartItemToCheck.getProduct().getId();
+                            Long newProductId = newCartItem.getProduct().getId();
+                            return productToCheckId.equals(newProductId);
+                        })
+                        .findFirst();
+
+                if(optionalCartItem.isPresent()) {
+                    CartItem cartItem = optionalCartItem.get();
+                    cartItem.setQuantity(quantity);
+                }
+            }
+            recalculateCart(cart);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public synchronized void delete(Cart cart, Long productId) {
+        if(productId != null){
+            List<CartItem> cartItems = cart.getCartItems();
+            cartItems.removeIf(cartItem -> {
+                        Product product = cartItem.getProduct();
+                        return productId.equals(product.getId());
+                    }
+            );
+            recalculateCart(cart);
+        }else{
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private void recalculateCart(Cart cart) {
+        List<CartItem> cartItems = cart.getCartItems();
+        int totalQuantity = cartItems.stream()
+                .map(CartItem::getQuantity)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        cart.setTotalQuantity(totalQuantity);
+
+        BigDecimal totalCost = cartItems.stream()
+                .map(item -> {
+                    Product product = item.getProduct();
+                    BigDecimal price = product.getPrice();
+                    BigDecimal amountOfProduct = BigDecimal.valueOf(item.getQuantity());
+                    return price.multiply(amountOfProduct);
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        cart.setTotalCost(totalCost);
     }
 }

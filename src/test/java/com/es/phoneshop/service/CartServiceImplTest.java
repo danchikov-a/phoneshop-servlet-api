@@ -17,18 +17,26 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CartServiceImplTest {
     @Mock
     private ProductDao productDao;
+    @Mock
+    private HttpServletRequest request;
+    @Mock
+    private HttpSession session;
     @InjectMocks
     private CartService cartService = CartServiceImpl.getInstance();
 
@@ -131,4 +139,66 @@ public class CartServiceImplTest {
         cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
         cartService.add(cart,productId,REMAINING_STOCK_LESS_THEN_TEST);
     }
+
+    @Test
+    public void shouldUpdateCartWhenStockLess() throws NotEnoughStockException {
+        Product product = new ProductBuilder()
+                .setCode(TEST_CODE)
+                .setDescription(TEST_DESCRIPTION)
+                .setPrice(TEST_PRICE)
+                .setCurrency(USD)
+                .setStock(TEST_STOCK)
+                .setImageUrl(TEST_IMAGE_URL)
+                .build();
+        long productId = product.getId();
+        Cart cart = new Cart();
+
+        when(productDao.getProduct(productId)).thenReturn(product);
+
+        cartService.add(cart,productId,STOCK_LESS_THEN_TEST);
+        cartService.update(cart,productId,REMAINING_STOCK_LESS_THEN_TEST);
+    }
+
+    @Test(expected = NotEnoughStockException.class)
+    public void shouldNotUpdateCartWithQuantityMoreThenStock() throws NotEnoughStockException {
+        Product product = new ProductBuilder()
+                .setCode(TEST_CODE)
+                .setDescription(TEST_DESCRIPTION)
+                .setPrice(TEST_PRICE)
+                .setCurrency(USD)
+                .setStock(TEST_STOCK)
+                .setImageUrl(TEST_IMAGE_URL)
+                .build();
+        long productId = product.getId();
+        Cart cart = new Cart();
+        when(productDao.getProduct(productId)).thenReturn(product);
+
+        cartService.add(cart, productId,STOCK_LESS_THEN_TEST);
+        cartService.update(cart, productId,STOCK_MORE_THEN_TEST);
+    }
+
+    @Test
+    public void shouldDeleteWhenIdIsValid() throws NotEnoughStockException {
+        Product product = new ProductBuilder()
+                .setCode(TEST_CODE)
+                .setDescription(TEST_DESCRIPTION)
+                .setPrice(TEST_PRICE)
+                .setCurrency(USD)
+                .setStock(TEST_STOCK)
+                .setImageUrl(TEST_IMAGE_URL)
+                .build();
+        long productId = product.getId();
+        Cart cart = new Cart();
+
+        when(productDao.getProduct(productId)).thenReturn(product);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(any())).thenReturn(cart);
+        when(cartService.getCart(request)).thenReturn(cart);
+
+        cartService.add(cart, productId,STOCK_LESS_THEN_TEST);
+        cartService.delete(cart, productId);
+        assertEquals(0, cartService.getCart(request).getCartItems().size());
+    }
+
+
 }

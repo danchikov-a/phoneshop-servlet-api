@@ -9,6 +9,18 @@
   <p>
     Welcome to Expert-Soft training!
   </p>
+  <div class="error">
+      <c:if test="${param.message eq 'error'}">
+          Cart item not added
+      </c:if>
+      ${error}
+    </div>
+  <div class="success">
+      <c:if test="${param.message eq 'success'}">
+          Cart item added
+      </c:if>
+  </div>
+
   <form>
     <input name="query" value="${param.query}">
     <button>Search</button>
@@ -22,6 +34,9 @@
             <tags:sort field="description" order="asc"/>
             <tags:sort field="description" order="desc"/>
         </td>
+        <td class="quantity">
+            Quantity
+        </td>
         <td class="price">
             Price
             <tags:sort field="price" order="asc"/>
@@ -30,21 +45,30 @@
       </tr>
     </thead>
     <c:forEach var="product" items="${products}">
-      <tr>
-        <td>
-          <img class="product-tile" src="${product.imageUrl}">
-        </td>
-        <td>
-            <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
-                ${product.description}
-            </a>
-        </td>
-        <td class="price">
-            <a href="${pageContext.servletContext.contextPath}/products/priceHistory/${product.id}">
-                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-            </a>
-        </td>
-      </tr>
+      <form method="post" action="${pageContext.servletContext.contextPath}/products/addToCart">
+          <tr>
+            <td>
+              <img class="product-tile" src="${product.imageUrl}">
+            </td>
+            <td>
+                <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
+                    ${product.description}
+                </a>
+            </td>
+            <td>
+                <input class="quantity" name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
+            </td>
+            <td class="price">
+                <a href="${pageContext.servletContext.contextPath}/products/priceHistory/${product.id}">
+                    <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+                </a>
+            </td>
+            <input name="productId" type="hidden" value="${product.id}">
+            <td>
+                <button>Add to cart</button>
+            </td>
+          </tr>
+      </form>
     </c:forEach>
   </table>
   <div class="labelReviewedProducts">

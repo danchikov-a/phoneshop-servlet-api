@@ -1,10 +1,11 @@
 package com.es.phoneshop.model.pricehistory;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
 
-public class PriceHistoryItem {
+public class PriceHistoryItem implements Serializable {
     private LocalDate startDate;
     private BigDecimal price;
     private Currency currency;

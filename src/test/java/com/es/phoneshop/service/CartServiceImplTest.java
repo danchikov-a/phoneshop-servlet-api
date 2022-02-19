@@ -1,6 +1,6 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.exception.NotEnoughStockException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;

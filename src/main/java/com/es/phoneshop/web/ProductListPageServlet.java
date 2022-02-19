@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.dao.ArrayListProductDao;
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.impl.ArrayListProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.service.product.ProductService;
 import com.es.phoneshop.service.product.impl.ProductServiceImpl;
 
@@ -40,6 +40,4 @@ public class ProductListPageServlet extends HttpServlet {
         request.setAttribute(ATTRIBUTE_PRODUCTS, productDao.findProducts(query,sortField,order));
         request.getRequestDispatcher(PRODUCT_LIST_JSP).forward(request, response);
     }
-
-
 }

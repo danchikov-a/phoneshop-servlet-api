@@ -2,14 +2,17 @@ package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.enums.PaymentMethod;
 import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.CartItem;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Order extends Cart {
     private static Long counter = 1L;
 
     private Long id;
+    private String secureId;
     private BigDecimal subtotal;
     private BigDecimal deliveryCost;
 
@@ -19,9 +22,18 @@ public class Order extends Cart {
     private LocalDate deliveryDate;
     private String deliveryAddress;
     private PaymentMethod paymentMethod;
+    private List<CartItem> items;
 
     public Order() {
         this.id = counter++;
+    }
+
+    public String getSecureId() {
+        return secureId;
+    }
+
+    public void setSecureId(String secureId) {
+        this.secureId = secureId;
     }
 
     public void setDeliveryCost(BigDecimal deliveryCost) {
@@ -94,5 +106,21 @@ public class Order extends Cart {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public static Long getCounter() {
+        return counter;
+    }
+
+    public static void setCounter(Long counter) {
+        Order.counter = counter;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
     }
 }

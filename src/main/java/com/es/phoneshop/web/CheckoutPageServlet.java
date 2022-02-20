@@ -33,7 +33,7 @@ public class CheckoutPageServlet extends HttpServlet {
     private static final String PARAMETER_LAST_NAME = "lastName";
     private static final String PARAMETER_PHONE = "phone";
     private static final String PARAMETER_DELIVERY_ADDRESS = "deliveryAddress";
-    private static final String SUCCESSFUL_URL_FORMAT = "/cart/overview/%d";
+    private static final String SUCCESSFUL_URL_FORMAT = "/order/overview/%s";
     private static final String ERRORS_ATTRIBUTE = "errors";
     private static final String ERROR_REQUIRED_FIELD = "Field should not be empty";
     private static final String PARAMETER_DELIVERY_DATE = "deliveryDate";
@@ -64,7 +64,8 @@ public class CheckoutPageServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Map<String, String> errors = new HashMap<>();
-        Order order = new Order();
+        Cart cart = cartService.getCart(request);
+        Order order = orderService.getOrder(cart);
 
         checkFieldByError(request, PARAMETER_FIRST_NAME, errors, order::setFirstName);
         checkFieldByError(request, PARAMETER_LAST_NAME, errors, order::setLastName);
@@ -74,10 +75,10 @@ public class CheckoutPageServlet extends HttpServlet {
         checkPaymentMethodByError(request, errors, order::setPaymentMethod);
 
         if(errors.isEmpty()){
-            String successfulUrl = String.format(SUCCESSFUL_URL_FORMAT, order.getId());
-
             orderService.placeOrder(order);
-            response.sendRedirect(successfulUrl);
+            String successfulUrl = String.format(SUCCESSFUL_URL_FORMAT, order.getSecureId());
+
+            response.sendRedirect(request.getContextPath() + successfulUrl);
             return;
         }else {
             request.setAttribute(ERRORS_ATTRIBUTE, errors);

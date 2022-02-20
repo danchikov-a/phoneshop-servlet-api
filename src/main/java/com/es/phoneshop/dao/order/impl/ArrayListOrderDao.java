@@ -39,6 +39,20 @@ public class ArrayListOrderDao implements OrderDao {
     }
 
     @Override
+    public Order getOrderBySecureId(String id) throws NoSuchOrderException {
+        if (id == null) {
+            throw new IllegalArgumentException();
+        } else {
+            synchronized (lock) {
+                return orders.stream()
+                        .filter(order -> id.equals(order.getSecureId()))
+                        .findAny()
+                        .orElseThrow(NoSuchOrderException::new);
+            }
+        }
+    }
+
+    @Override
     public void save(Order order) {
         synchronized (lock) {
             orders.add(order);

@@ -11,6 +11,7 @@ import com.es.phoneshop.service.order.OrderService;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService {
@@ -45,6 +46,7 @@ public class OrderServiceImpl implements OrderService {
         order.setSubtotal(cart.getTotalCost());
         order.setDeliveryCost(calculateDeliveryCost());
         order.setTotalCost(order.getSubtotal().add(order.getDeliveryCost()));
+        order.setCartItems(cart.getCartItems());
 
         return order;
     }
@@ -60,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
+        order.setSecureId(UUID.randomUUID().toString());
         orderDao.save(order);
     }
 }

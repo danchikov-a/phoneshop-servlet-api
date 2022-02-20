@@ -151,4 +151,11 @@ public class CartServiceImpl implements CartService {
 
         cart.setTotalCost(totalCost);
     }
+
+    public synchronized void clearCart(HttpServletRequest request){
+        HttpSession httpSession = request.getSession();
+        cart = new Cart();
+
+        httpSession.setAttribute(CART_SESSION, cart);
+    }
 }

@@ -64,11 +64,11 @@ public class CheckoutPageServletTest {
     @Test
     public void shouldRedirectWhenFormIsValid() throws ServletException, IOException {
         Cart cart = new Cart();
+
         when(cartService.getCart(request)).thenReturn(cart);
-        when(orderService.getOrder(cart)).thenReturn(new Order());
+        when(orderService.createOrder(cart)).thenReturn(new Order());
 
         servlet.doPost(request,response);
-
         verify(request).setAttribute(eq(ERRORS_ATTRIBUTE), any());
     }
 }

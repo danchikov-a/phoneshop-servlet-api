@@ -48,15 +48,15 @@
     <p>
         Subtotal:
 
-        <fmt:formatNumber value="${order.subtotal}" type="currency" currencySymbol="${curr.symbol}"/>
+        <fmt:formatNumber value="${order.subtotal}" type="currency" currencySymbol="${currency.symbol}"/>
     </p>
     <p>
         Delivery cost:
-        <fmt:formatNumber value="${order.deliveryCost}" type="currency" currencySymbol="${curr.symbol}"/>
+        <fmt:formatNumber value="${order.deliveryCost}" type="currency" currencySymbol="${currency.symbol}"/>
     </p>
     <p>
         Total cost:
-        <fmt:formatNumber value="${order.totalCost}" type="currency" currencySymbol="${curr.symbol}"/>
+        <fmt:formatNumber value="${order.totalCost}" type="currency" currencySymbol="${currency.symbol}"/>
     </p>
     <table>
         <tags:overviewField fieldName="First name" fieldInput="firstName"

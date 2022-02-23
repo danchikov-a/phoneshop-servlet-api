@@ -2,24 +2,16 @@ package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.dao.order.OrderDao;
 import com.es.phoneshop.dao.order.impl.ArrayListOrderDao;
-import com.es.phoneshop.dao.product.impl.ArrayListProductDao;
-import com.es.phoneshop.exception.NoSuchProductException;
-import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.Currency;
-import java.util.UUID;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ArrayListOrderDaoTest {

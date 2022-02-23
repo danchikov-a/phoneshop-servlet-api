@@ -35,4 +35,8 @@ public class MiniCartServlet extends HttpServlet {
         request.getRequestDispatcher(MINI_CART_JSP).include(request, response);
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
 }

@@ -27,9 +27,9 @@ public class AddCartItemPLPServlet extends HttpServlet {
     private static final String QUANTITY_PARAMETER = "quantity";
     private static final String PRODUCT_ID_PARAMETER = "productId";
     private static final String PROPERTY_BASE_NAME = "messages";
-    private static final String ERROR_MESSAGE_PROPERTY = "errorMessage";
-    private static final String ERROR_STOCK_MESSAGE_PROPERTY = "errorStockMessage";
-    private static final String ERROR_NEGATIVE_NUM_PROPERTY = "errorNegativeNumberMessage";
+    private static final String ERROR_MESSAGE_PROPERTY = "messages.error.message";
+    private static final String ERROR_STOCK_MESSAGE_PROPERTY = "messages.error.stock.message";
+    private static final String ERROR_NEGATIVE_NUM_PROPERTY = "messages.error.negative.number.message";
     private static final String ERROR_ATTRIBUTE = "error";
     private static final String SUCCESS_REDIRECT = "/products?message=success";
 

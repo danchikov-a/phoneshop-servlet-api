@@ -3,8 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.dao.order.OrderDao;
 import com.es.phoneshop.dao.order.impl.ArrayListOrderDao;
 import com.es.phoneshop.model.order.Order;
-import com.es.phoneshop.service.cart.CartService;
-import com.es.phoneshop.service.cart.impl.CartServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,24 +17,21 @@ public class OrderOverviewPageServlet extends HttpServlet {
     private static final String ORDER_ATTRIBUTE = "order";
     private static final String CART_ITEMS_ATTRIBUTE = "cartItems";
     private static final String OVERVIEW_JSP = "/WEB-INF/pages/overview.jsp";
-    private static final String CURRENCY_ATTRIBUTE = "curr";
+    private static final String CURRENCY_ATTRIBUTE = "currency";
     private static final int POSITION_WITHOUT_SLASH = 1;
 
     private OrderDao orderDao;
-    private CartService cartService;
 
     @Override
     public void init() throws ServletException {
         super.init();
         orderDao = ArrayListOrderDao.getInstance();
-        cartService = CartServiceImpl.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String secureOrderId = parseId(request.getPathInfo());
         Order order = orderDao.getOrderBySecureId(secureOrderId);
-        cartService.clearCart(request);
 
         request.setAttribute(CART_ITEMS_ATTRIBUTE, order.getCartItems());
         request.setAttribute(ORDER_ATTRIBUTE, order);

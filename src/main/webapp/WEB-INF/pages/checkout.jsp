@@ -91,12 +91,25 @@
                 </td>
                 <td>
                     <c:set var="error" value="${errors['paymentMethod']}"/>
-                    <select name="paymentMethod">
-                        <option></option>
-                        <c:forEach var="paymentMethod" items="${paymentMethods}">
-                            <option ${paymentMethod == param.paymentMethod ? 'selected="selected"' : ''}>${paymentMethod}</option>
-                        </c:forEach>
-                    </select>
+                    <c:choose>
+                      <c:when test="${not empty error}">
+                         <select name="paymentMethod">
+                            <option selected="selected"></option>
+                            <c:forEach var="paymentMethod" items="${paymentMethods}">
+                                <option>${paymentMethod}</option>
+                            </c:forEach>
+                        </select>
+                      </c:when>
+                      <c:otherwise>
+                          <select name="paymentMethod">
+                              <option></option>
+                              <c:forEach var="paymentMethod" items="${paymentMethods}">
+                                  <option ${paymentMethod == param.paymentMethod ? 'selected="selected"' : ''}>${paymentMethod}</option>
+                              </c:forEach>
+                          </select>
+                      </c:otherwise>
+                    </c:choose>
+
                     <c:if test="${not empty error}">
                         <div class="error">
                             ${error}

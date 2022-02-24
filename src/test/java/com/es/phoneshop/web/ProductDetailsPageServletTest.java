@@ -4,7 +4,7 @@ import com.es.phoneshop.exception.NoSuchProductException;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductBuilder;
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.service.cart.CartService;
 import com.es.phoneshop.service.product.ProductService;
 import org.junit.Before;
@@ -146,5 +146,4 @@ public class ProductDetailsPageServletTest {
 
         verify(request).setAttribute(ATTRIBUTE_ERROR,ERROR_MESSAGE);
     }
-
 }

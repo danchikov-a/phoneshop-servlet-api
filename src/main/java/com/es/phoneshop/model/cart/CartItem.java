@@ -4,7 +4,7 @@ import com.es.phoneshop.model.product.Product;
 
 import java.io.Serializable;
 
-public class CartItem implements Serializable {
+public class CartItem implements Serializable, Cloneable {
     private static final String CART_ITEM_FORMAT = "[%s,%d]";
 
     private Product product;
@@ -30,5 +30,10 @@ public class CartItem implements Serializable {
     @Override
     public String toString() {
         return String.format(CART_ITEM_FORMAT, product.getCode(),quantity);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

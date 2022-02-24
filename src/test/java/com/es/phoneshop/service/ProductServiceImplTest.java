@@ -1,6 +1,6 @@
 package com.es.phoneshop.service;
 
-import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductBuilder;
 import com.es.phoneshop.service.cart.impl.CartServiceImpl;

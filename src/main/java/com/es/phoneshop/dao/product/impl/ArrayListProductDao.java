@@ -1,6 +1,7 @@
-package com.es.phoneshop.dao;
+package com.es.phoneshop.dao.product.impl;
 
 
+import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.exception.NoSuchProductException;
 import com.es.phoneshop.model.product.Product;
 import org.apache.commons.lang3.StringUtils;
@@ -109,6 +110,4 @@ public class ArrayListProductDao implements ProductDao {
             }
         }
     }
-
-
 }

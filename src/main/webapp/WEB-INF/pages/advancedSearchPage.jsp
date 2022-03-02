@@ -39,6 +39,19 @@
             </td>
           </tr>
         </thead>
+
+
+        <c:if test="${not empty errors}">
+            <div class="error">
+                error occured
+            </div>
+        </c:if>
+        <c:if test="${empty errors}">
+            <div style="color:green">
+                Found ${productsSize} products
+            </div>
+        </c:if>
+
         <c:forEach var="product" items="${products}">
               <tr>
                 <td>

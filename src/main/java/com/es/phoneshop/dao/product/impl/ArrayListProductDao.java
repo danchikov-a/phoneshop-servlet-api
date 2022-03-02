@@ -97,15 +97,19 @@ public class ArrayListProductDao implements ProductDao {
     public List<Product> advancedFindProducts(String productCode, BigDecimal minPrice,
                                               BigDecimal maxPrice, Integer minStock) {
         synchronized (lock) {
-            List<Product> listToShow;
+            List<Product> listToShow = new ArrayList<>();
+            boolean isFieldAreEmpty = productCode == null && minPrice == null && maxPrice == null && minStock == null;
 
-            listToShow = products.stream()
-                  //  .filter(product -> productCode == null || productCode.equals(product.getCode()))
-                    .filter(product -> minPrice == null || product.getPrice().compareTo(minPrice) >= 0)
-                    .filter(product -> maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0)
-                    .filter(product -> minStock == null || product.getStock() >= minStock)
-                    .collect(Collectors.toList());
-
+            if(isFieldAreEmpty){
+                return listToShow;
+            } else {
+                listToShow = products.stream()
+                        .filter(product -> productCode == null || productCode.equals(product.getCode()))
+                        .filter(product -> minPrice == null || product.getPrice().compareTo(minPrice) >= 0)
+                        .filter(product -> maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0)
+                        .filter(product -> minStock == null || product.getStock() >= minStock)
+                        .collect(Collectors.toList());
+            }
             return listToShow;
         }
     }

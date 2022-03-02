@@ -3,8 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.dao.product.ProductDao;
 import com.es.phoneshop.dao.product.impl.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.service.product.ProductService;
-import com.es.phoneshop.service.product.impl.ProductServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletConfig;
@@ -25,6 +23,12 @@ public class AdvancedSearchPageServlet extends HttpServlet {
     private static final String MAX_PRICE_PARAMETER = "searchMaxPrice";
     private static final String MIN_STOCK_PARAMETER = "searchMinStock";
     private static final String ATTRIBUTE_PRODUCTS = "products";
+    private static final String ERROR_MESSAGE = "Not a number";
+    private static final String ERRORS_LIST = "errors";
+    private static final String PRODUCTS_SIZE = "productsSize";
+    private static final int MIN_PRICE_FIELD = 1;
+    private static final int MAX_PRICE_FIELD = 2;
+    private static final int MIN_STOCK_FIELD = 3;
 
     private ProductDao productDao;
 
@@ -43,14 +47,16 @@ public class AdvancedSearchPageServlet extends HttpServlet {
         List<String> errors = new ArrayList<>();
 
         String productCode = productCodeParameter;
+        if(StringUtils.isEmpty(productCodeParameter)){
+            productCode = null;
+        }
 
         BigDecimal minPrice = null;
         if(!StringUtils.isEmpty(minPriceParameter)) {
             try {
                 minPrice = new BigDecimal(minPriceParameter);
             } catch (NumberFormatException numberFormatException) {
-                numberFormatException.printStackTrace();
-                return;
+                errors.add(ERROR_MESSAGE);
             }
         }
 
@@ -59,26 +65,26 @@ public class AdvancedSearchPageServlet extends HttpServlet {
             try {
                 maxPrice = new BigDecimal(maxPriceParameter);
             } catch (NumberFormatException numberFormatException) {
-                numberFormatException.printStackTrace();
-                return;
+                errors.add(ERROR_MESSAGE);
             }
         }
 
-        int minStock = 0;
+        Integer minStock = null;
         if(!StringUtils.isEmpty(minStockParameter)) {
             try {
                 minStock = Integer.parseInt(minStockParameter);
             } catch (NumberFormatException numberFormatException) {
-                numberFormatException.printStackTrace();
-                return;
+                errors.add(ERROR_MESSAGE);
             }
         }
 
         if(errors.isEmpty()){
             List<Product> products = productDao.advancedFindProducts(productCode, minPrice, maxPrice, minStock);
             request.setAttribute(ATTRIBUTE_PRODUCTS, products);
+            request.setAttribute(PRODUCTS_SIZE, products.size());
         }else{
-
+            request.setAttribute(ERRORS_LIST, errors);
+            request.setAttribute(ATTRIBUTE_PRODUCTS, new ArrayList<>());
         }
 
         request.getRequestDispatcher(SEARCH_JSP).forward(request, response);

@@ -6,6 +6,7 @@ import com.es.phoneshop.exception.NoSuchProductException;
 import com.es.phoneshop.model.product.Product;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -91,6 +92,26 @@ public class ArrayListProductDao implements ProductDao {
                     : stream.sorted(sortFieldComparator);
         }
         return stream;
+    }
+
+    public List<Product> advancedFindProducts(String productCode, BigDecimal minPrice,
+                                              BigDecimal maxPrice, Integer minStock) {
+        synchronized (lock) {
+            List<Product> listToShow = new ArrayList<>();
+            boolean isFieldAreEmpty = productCode == null && minPrice == null && maxPrice == null && minStock == null;
+
+            if(isFieldAreEmpty){
+                return listToShow;
+            } else {
+                listToShow = products.stream()
+                        .filter(product -> productCode == null || productCode.equals(product.getCode()))
+                        .filter(product -> minPrice == null || product.getPrice().compareTo(minPrice) >= 0)
+                        .filter(product -> maxPrice == null || product.getPrice().compareTo(maxPrice) <= 0)
+                        .filter(product -> minStock == null || product.getStock() >= minStock)
+                        .collect(Collectors.toList());
+            }
+            return listToShow;
+        }
     }
 
     @Override
